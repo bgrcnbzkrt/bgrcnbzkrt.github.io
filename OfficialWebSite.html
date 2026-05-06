@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAME FORGE — Unity WebGL Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0a0a0f;
+    --bg2:      #10101a;
+    --bg3:      #16162a;
+    --surface:  #1c1c32;
+    --border:   rgba(120,120,255,0.13);
+    --accent:   #6c63ff;
+    --accent2:  #ff6b6b;
+    --accent3:  #63ffda;
+    --text:     #e8e8f0;
+    --muted:    #7070a0;
+    --card-r:   16px;
+    --font-h:   'Syne', sans-serif;
+    --font-m:   'Space Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-h);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  /* ─── GRID LINES ─── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(108,99,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(108,99,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 64px;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--font-h);
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--font-m);
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent3); }
+
+  .nav-cta {
+    font-family: var(--font-m);
+    font-size: 0.72rem;
+    padding: 8px 18px;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .nav-cta:hover { background: var(--accent); color: #fff; }
+
+  .hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 5px;
+    padding: 4px;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 64px; left: 0; right: 0;
+    background: rgba(10,10,15,0.97);
+    backdrop-filter: blur(20px);
+    z-index: 999;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: var(--text);
+    text-decoration: none;
+    font-family: var(--font-m);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── HERO ─── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 2rem 4rem;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(108,99,255,0.18) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-family: var(--font-m);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--accent3);
+    border: 1px solid rgba(99,255,218,0.3);
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  h1.hero-title {
+    font-size: clamp(2.8rem, 8vw, 6.5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.9s 0.1s ease both;
+  }
+
+  h1.hero-title .line2 { color: var(--accent); }
+  h1.hero-title .line3 { color: var(--accent2); font-style: italic; }
+
+  .hero-desc {
+    max-width: 480px;
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.9s 0.2s ease both;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.9s 0.3s ease both;
+  }
+
+  .btn-primary {
+    padding: 14px 32px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 8px;
+    font-family: var(--font-m);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 32px rgba(108,99,255,0.35);
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(108,99,255,0.5); }
+
+  .btn-ghost {
+    padding: 14px 32px;
+    background: transparent;
+    color: var(--text);
+    border-radius: 8px;
+    font-family: var(--font-m);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-ghost:hover { border-color: var(--muted); color: var(--accent3); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    animation: fadeUp 1s 0.6s ease both;
+  }
+
+  .hero-scroll span {
+    font-family: var(--font-m);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--muted), transparent);
+    animation: scrollPulse 1.8s ease-in-out infinite;
+  }
+
+  /* ─── STATS ─── */
+  .stats-bar {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+    overflow-x: auto;
+  }
+
+  .stat {
+    flex: 1;
+    min-width: 130px;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+  }
+  .stat-label {
+    font-family: var(--font-m);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* ─── SECTIONS ─── */
+  section { position: relative; z-index: 1; }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-family: var(--font-m);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  /* ─── GAMES GRID ─── */
+  #games {
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .game-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-r);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+
+  .game-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent);
+    box-shadow: 0 20px 60px rgba(108,99,255,0.2);
+  }
+
+  .game-card.featured {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .game-thumb {
+    position: relative;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    background: var(--bg3);
+  }
+
+  .game-card.featured .game-thumb {
+    aspect-ratio: auto;
+    min-height: 280px;
+  }
+
+  .game-thumb-bg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    transition: transform 0.4s;
+  }
+
+  .game-card:hover .game-thumb-bg { transform: scale(1.08); }
+
+  .game-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-family: var(--font-m);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+
+  .badge-featured { background: var(--accent); color: #fff; }
+  .badge-new { background: var(--accent3); color: #0a0a0f; }
+  .badge-wip { background: rgba(255,107,107,0.2); color: var(--accent2); border: 1px solid rgba(255,107,107,0.3); }
+
+  .play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(108,99,255,0);
+    transition: background 0.3s;
+    z-index: 3;
+  }
+
+  .game-card:hover .play-overlay { background: rgba(108,99,255,0.15); }
+
+  .play-btn-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  .game-card:hover .play-btn-icon { opacity: 1; transform: scale(1); }
+
+  .game-info {
+    padding: 1.25rem;
+  }
+
+  .game-card.featured .game-info {
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .game-genre {
+    font-family: var(--font-m);
+    font-size: 0.65rem;
+    color: var(--accent3);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .game-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .game-card.featured .game-name { font-size: 2rem; }
+
+  .game-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .game-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .game-tag {
+    font-family: var(--font-m);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--muted);
+  }
+
+  .game-play-btn {
+    margin-top: 1.5rem;
+    padding: 10px 24px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    font-family: var(--font-m);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s;
+    align-self: flex-start;
+  }
+
+  .game-play-btn:hover { box-shadow: 0 4px 20px rgba(108,99,255,0.5); transform: translateY(-1px); }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 5000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    backdrop-filter: blur(8px);
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 1000px;
+    overflow: hidden;
+    position: relative;
+    animation: modalIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .modal-title-area { display: flex; align-items: center; gap: 0.75rem; }
+
+  .modal-game-icon { font-size: 1.5rem; }
+
+  .modal-game-name {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .modal-game-genre {
+    font-family: var(--font-m);
+    font-size: 0.65rem;
+    color: var(--accent3);
+    letter-spacing: 0.08em;
+  }
+
+  .modal-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .modal-close:hover { background: var(--accent2); color: #fff; border-color: var(--accent2); }
+
+  .modal-body {
+    padding: 0;
+  }
+
+  .iframe-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    background: #000;
+  }
+
+  .iframe-wrapper iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .iframe-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    gap: 1.5rem;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .iframe-placeholder .big-icon { font-size: 4rem; }
+
+  .iframe-placeholder h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+
+  .iframe-placeholder p {
+    font-family: var(--font-m);
+    font-size: 0.75rem;
+    color: var(--muted);
+    max-width: 380px;
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+  }
+
+  .iframe-placeholder code {
+    display: inline-block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--accent3);
+    font-size: 0.7rem;
+  }
+
+  .modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .modal-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+  .modal-footer-right { display: flex; gap: 0.75rem; }
+
+  .btn-sm {
+    padding: 7px 16px;
+    font-family: var(--font-m);
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+  }
+
+  .btn-sm:hover { border-color: var(--muted); }
+  .btn-sm.accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-sm.accent:hover { box-shadow: 0 4px 16px rgba(108,99,255,0.4); }
+
+  /* ─── ABOUT ─── */
+  #about {
+    padding: 6rem 2rem;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+  }
+
+  .about-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .about-text .section-tag { display: block; }
+  .about-text .section-title { text-align: left; margin-bottom: 1.25rem; }
+
+  .about-text p {
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .about-skills {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .skill-item { display: flex; flex-direction: column; gap: 6px; }
+
+  .skill-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-m);
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+
+  .skill-bar {
+    height: 4px;
+    background: var(--surface);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .skill-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ─── CONTACT ─── */
+  #contact {
+    padding: 6rem 2rem;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  #contact .section-title { margin-bottom: 1rem; }
+
+  #contact p {
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    font-size: 0.95rem;
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    font-family: var(--font-m);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    transition: all 0.2s;
+    background: var(--surface);
+  }
+
+  .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 2rem;
+    text-align: center;
+    font-family: var(--font-m);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  footer span { color: var(--accent); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50%       { opacity: 1;   transform: scaleY(1.2); }
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.92) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+
+    .game-card.featured {
+      grid-column: auto;
+      display: block;
+    }
+
+    .game-card.featured .game-thumb { min-height: 200px; }
+    .game-card.featured .game-info { padding: 1.25rem; }
+    .game-card.featured .game-name { font-size: 1.4rem; }
+
+    .games-grid { grid-template-columns: 1fr; }
+
+    .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .about-text .section-title { text-align: center; }
+    .about-text .section-tag { text-align: center; }
+
+    .stats-bar { flex-wrap: wrap; }
+    .stat { flex: 1 1 50%; border-right: none; border-bottom: 1px solid var(--border); }
+  }
+
+  @media (max-width: 480px) {
+    h1.hero-title { font-size: 2.4rem; }
+    .modal-footer { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">GAME<span>FORGE</span></a>
+  <ul class="nav-links">
+    <li><a href="#games">// OYUNLAR</a></li>
+    <li><a href="#about">// HAKKIMDA</a></li>
+    <li><a href="#contact">// İLETİŞİM</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">İLETİŞİME GEÇ</a>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menü">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#games" onclick="toggleMenu()">// OYUNLAR</a>
+  <a href="#about" onclick="toggleMenu()">// HAKKIMDA</a>
+  <a href="#contact" onclick="toggleMenu()">// İLETİŞİM</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-tag">✦ UNITY WEBGL PORTFÖYܼ</div>
+  <h1 class="hero-title">
+    OYUNLAR<br>
+    <span class="line2">BURADA</span><br>
+    <span class="line3">Çalışır.</span>
+  </h1>
+  <p class="hero-desc">
+    Tarayıcında, kurmaya gerek kalmadan — hemen başla.
+    Unity ile geliştirilen bağımsız oyunlarımın koleksiyonu.
+  </p>
+  <div class="hero-btns">
+    <a href="#games" class="btn-primary">Oyunları Keşfet ↓</a>
+    <a href="#about" class="btn-ghost">Kim bu geliştirici?</a>
+  </div>
+  <div class="hero-scroll">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat">
+    <span class="stat-num" data-target="12">0</span>
+    <span class="stat-label">YAYINLANAN OYUN</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num" data-target="48">0</span>
+    <span class="stat-label">BİN OYUNCU</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num" data-target="6">0</span>
+    <span class="stat-label">GAME JAM ÖDÜLÜ</span>
+  </div>
+  <div class="stat">
+    <span class="stat-num" data-target="3">0</span>
+    <span class="stat-label">YIL DENEYİM</span>
+  </div>
+</div>
+
+<!-- GAMES -->
+<section id="games">
+  <div class="section-header">
+    <div class="section-tag">// 01 OYUNLAR</div>
+    <h2 class="section-title">Koleksiyonum</h2>
+  </div>
+
+  <div class="games-grid" id="gamesGrid"></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+    <div class="about-text">
+      <span class="section-tag">// 02 HAKKIMDA</span>
+      <h2 class="section-title">Kod yazan,<br>oyun düşünen.</h2>
+      <p>Merhaba! Ben bağımsız bir Unity geliştiricisiyim. Oyunları sadece oynamak değil, onları sıfırdan inşa etmek beni heyecanlandırıyor.</p>
+      <p>Mekanik tasarımdan shader yazımına, level design'dan ses entegrasyonuna kadar tek başıma eksiksiz deneyimler üretiyorum.</p>
+    </div>
+    <div class="about-skills">
+      <div class="skill-item">
+        <div class="skill-label"><span>UNITY & C#</span><span>95%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-label"><span>SHADER GRAPH</span><span>80%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-label"><span>GAME DESIGN</span><span>88%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-label"><span>WEBGL / OPTIMIZASYON</span><span>75%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-label"><span>BLENDER / 3D</span><span>60%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-width="60"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-tag">// 03 İLETİŞİM</div>
+  <h2 class="section-title">Bir fikrin mi var?<br>Konuşalım.</h2>
+  <p>Kolaborasyon, iş teklifi ya da sadece oyunlar hakkında sohbet etmek için ulaşabilirsin.</p>
+  <div class="contact-links">
+    <a href="mailto:sen@ornek.com" class="contact-link">✉ E-POSTA</a>
+    <a href="https://twitter.com" target="_blank" class="contact-link">🐦 TWITTER</a>
+    <a href="https://github.com" target="_blank" class="contact-link">⌨ GITHUB</a>
+    <a href="https://itch.io" target="_blank" class="contact-link">🎮 ITCH.IO</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2024 <span>GAMEFORGE</span> — Tüm hakları saklıdır. Unity ile ♥ ile yapıldı.</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title-area">
+        <span class="modal-game-icon" id="modalIcon"></span>
+        <div>
+          <div class="modal-game-name" id="modalName"></div>
+          <div class="modal-game-genre" id="modalGenre"></div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="iframe-wrapper" id="iframeWrapper"></div>
+    </div>
+    <div class="modal-footer">
+      <div class="modal-tags" id="modalTags"></div>
+      <div class="modal-footer-right">
+        <a id="modalItchLink" href="#" target="_blank" class="btn-sm">🔗 ITCH.IO'DA AÇ</a>
+        <button class="btn-sm accent" onclick="closeModal()">✕ KAPAT</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── OYUN VERİSİ ───────────────────────────────────────────────
+// KULLANIM: src alanına Unity WebGL derlemenizin URL'ini yazın.
+// Boş bırakırsanız placeholder ekranı gösterilir.
+const games = [
+  {
+    id: 1,
+    name: "ALRIGHT, CHEF!",
+    genre: "CASUAL / COOKING",
+    desc: "Siparişler gelmeye devam ediyor, mutfak kaos içinde! Tarifleri takip et, zamanında yetiş.",
+    icon: "🍳",
+    tags: ["CASUAL", "COOKING", "TIME MANAGEMENT"],
+    badge: "featured",
+    badgeText: "⭐ ÖNE ÇIKAN",
+    itchUrl: "https://itch.io",
+    src: "GameBuild/index.html",
+    bg: "linear-gradient(135deg, #1a0a00 0%, #3e1a00 50%, #2e0a00 100%)"
+  },
+  {
+    id: 2,
+    name: "NEON DUNGEON",
+    genre: "ROGUELIKE / ACTION",
+    desc: "Her geçişte farklı bir zindan. Silahlara, yeteneklere dikkat et — çünkü ölüm kalıcı.",
+    icon: "⚔️",
+    tags: ["ROGUELIKE", "PERMADEATH", "DUNGEON"],
+    badge: "new",
+    badgeText: "✨ YENİ",
+    itchUrl: "https://itch.io",
+    src: "",
+    bg: "linear-gradient(135deg, #1a0a0a 0%, #2e0a2e 50%, #1a1a0a 100%)"
+  },
+  {
+    id: 3,
+    name: "GRAVITY SHIFT",
+    genre: "PUZZLE / PLATFORM",
+    desc: "Yerçekimini tersine çevir, bulmacaları çöz. Fizik tabanlı platform mekaniği.",
+    icon: "🔮",
+    tags: ["PUZZLE", "PHYSICS", "PLATFORM"],
+    badge: null,
+    itchUrl: "https://itch.io",
+    src: "",
+    bg: "linear-gradient(135deg, #0a1a0a 0%, #0a2e1a 50%, #0a0a2e 100%)"
+  },
+  {
+    id: 4,
+    name: "PIXEL WARS",
+    genre: "STRATEJI / TOWER DEFENSE",
+    desc: "Piksel ordularını yönet, kuleleri yükselt, dalgaları durdur. Sonsuz mod desteği ile.",
+    icon: "🏰",
+    tags: ["STRATEGY", "TOWER DEFENSE", "WAVES"],
+    badge: "wip",
+    badgeText: "🔧 WIP",
+    itchUrl: "https://itch.io",
+    src: "",
+    bg: "linear-gradient(135deg, #1a1a0a 0%, #2e2a0a 50%, #0a1a0a 100%)"
+  },
+  {
+    id: 5,
+    name: "DEEP SIGNAL",
+    genre: "HORROR / EXPLORATION",
+    desc: "Terk edilmiş bir deniz altı araştırma istasyonu. Sessizlik en büyük düşmanın.",
+    icon: "🦑",
+    tags: ["HORROR", "EXPLORATION", "ATMOSPHERE"],
+    badge: null,
+    itchUrl: "https://itch.io",
+    src: "",
+    bg: "linear-gradient(135deg, #000a1a 0%, #001a2e 50%, #000a0a 100%)"
+  }
+];
+
+// ─── OYUN KARTLARINI OLUŞTUR ─────────────────────────────────
+function renderGames() {
+  const grid = document.getElementById('gamesGrid');
+  games.forEach((g, i) => {
+    const card = document.createElement('div');
+    card.className = 'game-card' + (i === 0 ? ' featured' : '');
+    card.onclick = () => openModal(g);
+
+    let badgeHtml = '';
+    if (g.badge) {
+      const cls = g.badge === 'featured' ? 'badge-featured' : g.badge === 'new' ? 'badge-new' : 'badge-wip';
+      badgeHtml = `<div class="game-badge ${cls}">${g.badgeText || g.badge.toUpperCase()}</div>`;
+    }
+
+    const tagsHtml = g.tags.map(t => `<span class="game-tag">${t}</span>`).join('');
+
+    card.innerHTML = `
+      <div class="game-thumb">
+        <div class="game-thumb-bg" style="background:${g.bg}">${g.icon}</div>
+        ${badgeHtml}
+        <div class="play-overlay">
+          <div class="play-btn-icon">▶</div>
+        </div>
+      </div>
+      <div class="game-info">
+        <div class="game-genre">${g.genre}</div>
+        <div class="game-name">${g.name}</div>
+        <div class="game-desc">${g.desc}</div>
+        <div class="game-meta">${tagsHtml}</div>
+        ${i === 0 ? `<button class="game-play-btn">▶ OYNA</button>` : ''}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ─── MODAL ───────────────────────────────────────────────────
+function openModal(game) {
+  document.getElementById('modalIcon').textContent = game.icon;
+  document.getElementById('modalName').textContent = game.name;
+  document.getElementById('modalGenre').textContent = game.genre;
+  document.getElementById('modalItchLink').href = game.itchUrl || '#';
+
+  const tagsEl = document.getElementById('modalTags');
+  tagsEl.innerHTML = game.tags.map(t => `<span class="game-tag">${t}</span>`).join('');
+
+  const wrapper = document.getElementById('iframeWrapper');
+  if (game.src && game.src.length > 0) {
+    wrapper.innerHTML = `<iframe src="${game.src}" allowfullscreen allow="autoplay; fullscreen"></iframe>`;
+  } else {
+    wrapper.innerHTML = `
+      <div class="iframe-placeholder">
+        <div class="big-icon">${game.icon}</div>
+        <h3>${game.name}</h3>
+        <p>
+          Unity WebGL dosyalarınızı yükleyin ve<br>
+          <code>games</code> dizisindeki <code>src</code> alanını doldurun.<br><br>
+          Örnek: <code>src: "https://siteniz.com/oyun/index.html"</code>
+        </p>
+        <a href="${game.itchUrl}" target="_blank" class="btn-primary" style="text-decoration:none; font-family: var(--font-m); font-size: 0.75rem;">
+          🔗 ITCH.IO'DA OYNA
+        </a>
+      </div>
+    `;
+  }
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('iframeWrapper').innerHTML = '';
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ─── MOBİL MENÜ ──────────────────────────────────────────────
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// ─── SAYAÇ ANİMASYONU ────────────────────────────────────────
+function animateCounters() {
+  document.querySelectorAll('[data-target]').forEach(el => {
+    const target = +el.dataset.target;
+    let current = 0;
+    const step = target / 40;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = Math.floor(current) + (target >= 10 ? '' : '');
+    }, 30);
+  });
+}
+
+// ─── SCROLL ANIMATE ──────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    // Stats
+    if (entry.target.classList.contains('stats-bar')) animateCounters();
+    // Skill bars
+    entry.target.querySelectorAll('.skill-fill').forEach(bar => {
+      bar.style.width = bar.dataset.width + '%';
+    });
+    observer.unobserve(entry.target);
+  });
+}, { threshold: 0.3 });
+
+// ─── INIT ────────────────────────────────────────────────────
+renderGames();
+observer.observe(document.querySelector('.stats-bar'));
+observer.observe(document.getElementById('about'));
+</script>
+
+</body>
+</html>
