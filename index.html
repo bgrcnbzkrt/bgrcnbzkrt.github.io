@@ -681,34 +681,20 @@
 
   .about-skills {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-content: flex-start;
   }
 
-  .skill-item { display: flex; flex-direction: column; gap: 6px; }
-
-  .skill-label {
-    display: flex;
-    justify-content: space-between;
+  .skill-chip {
     font-family: var(--font-m);
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     letter-spacing: 0.06em;
-    color: var(--muted);
-  }
-
-  .skill-bar {
-    height: 4px;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
     background: var(--surface);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .skill-fill {
-    height: 100%;
-    border-radius: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--accent3));
-    width: 0;
-    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
   }
 
   /* ─── CONTACT ─── */
@@ -871,26 +857,11 @@
       <p>Mekanik tasarımdan shader yazımına, level design'dan ses entegrasyonuna kadar tek başıma eksiksiz deneyimler üretiyorum.</p>
     </div>
     <div class="about-skills">
-      <div class="skill-item">
-        <div class="skill-label"><span>UNITY & C#</span><span>95%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-label"><span>SHADER GRAPH</span><span>80%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-label"><span>GAME DESIGN</span><span>88%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-label"><span>WEBGL / OPTIMIZASYON</span><span>75%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-label"><span>BLENDER / 3D</span><span>60%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-width="60"></div></div>
-      </div>
+      <span class="skill-chip">Unity & C#</span>
+      <span class="skill-chip">Shader Graph</span>
+      <span class="skill-chip">Game Design</span>
+      <span class="skill-chip">WebGL</span>
+      <span class="skill-chip">Blender / 3D</span>
     </div>
   </div>
 </section>
