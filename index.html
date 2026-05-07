@@ -283,41 +283,13 @@
     animation: scrollPulse 1.8s ease-in-out infinite;
   }
 
-  /* ─── STATS ─── */
-  .stats-bar {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    background: var(--bg2);
-    overflow-x: auto;
-  }
-
-  .stat {
-    flex: 1;
-    min-width: 130px;
-    padding: 1.5rem 2rem;
-    text-align: center;
-    border-right: 1px solid var(--border);
-  }
-
-  .stat:last-child { border-right: none; }
-  .stat-num {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--accent);
-    display: block;
-  }
-  .stat-label {
-    font-family: var(--font-m);
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    margin-top: 4px;
-    display: block;
+  /* ─── HERO LOGO ─── */
+  .hero-logo {
+    max-height: 120px;
+    max-width: 400px;
+    object-fit: contain;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
   }
 
   /* ─── SECTIONS ─── */
@@ -868,16 +840,7 @@
 <!-- HERO -->
 <section id="hero">
   <div class="hero-glow"></div>
-  <div class="hero-tag">✦ UNITY WEBGL PORTFÖYܼ</div>
-  <h1 class="hero-title">
-    OYUNLAR<br>
-    <span class="line2">BURADA</span><br>
-    <span class="line3">Çalışır.</span>
-  </h1>
-  <p class="hero-desc">
-    Tarayıcında, kurmaya gerek kalmadan — hemen başla.
-    Unity ile geliştirilen bağımsız oyunlarımın koleksiyonu.
-  </p>
+  <img src="logo.png" alt="Company Logo" class="hero-logo">
   <div class="hero-btns">
     <a href="#games" class="btn-primary">Oyunları Keşfet ↓</a>
     <a href="#about" class="btn-ghost">Kim bu geliştirici?</a>
@@ -887,26 +850,6 @@
     <div class="scroll-line"></div>
   </div>
 </section>
-
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stat">
-    <span class="stat-num" data-target="12">0</span>
-    <span class="stat-label">YAYINLANAN OYUN</span>
-  </div>
-  <div class="stat">
-    <span class="stat-num" data-target="48">0</span>
-    <span class="stat-label">BİN OYUNCU</span>
-  </div>
-  <div class="stat">
-    <span class="stat-num" data-target="6">0</span>
-    <span class="stat-label">GAME JAM ÖDÜLÜ</span>
-  </div>
-  <div class="stat">
-    <span class="stat-num" data-target="3">0</span>
-    <span class="stat-label">YIL DENEYİM</span>
-  </div>
-</div>
 
 <!-- GAMES -->
 <section id="games">
@@ -1069,7 +1012,8 @@ const games = [
 // ─── OYUN KARTLARINI OLUŞTUR ─────────────────────────────────
 function renderGames() {
   const grid = document.getElementById('gamesGrid');
-  games.forEach((g, i) => {
+  const filtered = games.filter(g => g.src && g.src.length > 0);
+  filtered.forEach((g, i) => {
     const card = document.createElement('div');
     card.className = 'game-card' + (i === 0 ? ' featured' : '');
     card.onclick = () => openModal(g);
@@ -1153,27 +1097,10 @@ function toggleMenu() {
   document.getElementById('mobileMenu').classList.toggle('open');
 }
 
-// ─── SAYAÇ ANİMASYONU ────────────────────────────────────────
-function animateCounters() {
-  document.querySelectorAll('[data-target]').forEach(el => {
-    const target = +el.dataset.target;
-    let current = 0;
-    const step = target / 40;
-    const timer = setInterval(() => {
-      current += step;
-      if (current >= target) { current = target; clearInterval(timer); }
-      el.textContent = Math.floor(current) + (target >= 10 ? '' : '');
-    }, 30);
-  });
-}
-
 // ─── SCROLL ANIMATE ──────────────────────────────────────────
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
-    // Stats
-    if (entry.target.classList.contains('stats-bar')) animateCounters();
-    // Skill bars
     entry.target.querySelectorAll('.skill-fill').forEach(bar => {
       bar.style.width = bar.dataset.width + '%';
     });
@@ -1183,7 +1110,6 @@ const observer = new IntersectionObserver((entries) => {
 
 // ─── INIT ────────────────────────────────────────────────────
 renderGames();
-observer.observe(document.querySelector('.stats-bar'));
 observer.observe(document.getElementById('about'));
 </script>
 
