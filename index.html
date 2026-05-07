@@ -323,6 +323,105 @@
     margin: 0 auto;
   }
 
+  .collection-block {
+    margin-bottom: 4rem;
+  }
+
+  .collection-label {
+    font-family: var(--font-m);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    color: var(--accent3);
+    border-left: 2px solid var(--accent3);
+    padding-left: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ─── STORE GAME CARDS ─── */
+  .store-games-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .store-game-card {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-r);
+    padding: 1.5rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .store-game-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 8px 40px rgba(108,99,255,0.15);
+  }
+
+  .store-game-logo {
+    width: 96px;
+    height: 96px;
+    border-radius: 20px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+  }
+
+  .store-game-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .store-game-genre {
+    font-family: var(--font-m);
+    font-size: 0.62rem;
+    color: var(--accent3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  .store-game-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .store-game-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .store-badges {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .store-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-family: var(--font-m);
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: opacity 0.2s;
+  }
+
+  .store-badge:hover { opacity: 0.8; }
+  .store-badge.android { background: #1a1a1a; }
+
   .games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -840,11 +939,19 @@
 <!-- GAMES -->
 <section id="games">
   <div class="section-header">
-    <div class="section-tag">// 01 OYUNLAR</div>
+    <div class="section-tag">// 01 KOLEKSİYON</div>
     <h2 class="section-title">Koleksiyonum</h2>
   </div>
 
-  <div class="games-grid" id="gamesGrid"></div>
+  <div class="collection-block">
+    <div class="collection-label">GAMES</div>
+    <div class="store-games-list" id="storeGamesList"></div>
+  </div>
+
+  <div class="collection-block">
+    <div class="collection-label">DEMOS</div>
+    <div class="games-grid" id="gamesGrid"></div>
+  </div>
 </section>
 
 <!-- ABOUT -->
@@ -911,6 +1018,53 @@
 </div>
 
 <script>
+// ─── STORE OYUNLARI ────────────────────────────────────────────
+// logo: oyun ikonunun dosya yolu (örn. "images/chef-icon.png")
+// appStoreUrl / playStoreUrl: boş bırakırsan o badge gözükmez
+const storeGames = [
+  // Örnek — kendi oyununla doldur:
+  // {
+  //   name: "OYUN ADI",
+  //   genre: "CASUAL / PUZZLE",
+  //   desc: "Kısa açıklama.",
+  //   logo: "images/oyun-icon.png",
+  //   appStoreUrl: "https://apps.apple.com/...",
+  //   playStoreUrl: ""
+  // },
+];
+
+function renderStoreGames() {
+  const list = document.getElementById('storeGamesList');
+  if (storeGames.length === 0) {
+    list.innerHTML = '<p style="font-family:var(--font-m);font-size:0.72rem;color:var(--muted);">Yakında...</p>';
+    return;
+  }
+  storeGames.forEach(g => {
+    const card = document.createElement('div');
+    card.className = 'store-game-card';
+
+    const badges = [
+      g.appStoreUrl ? `<a href="${g.appStoreUrl}" target="_blank" class="store-badge ios">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        App Store</a>` : '',
+      g.playStoreUrl ? `<a href="${g.playStoreUrl}" target="_blank" class="store-badge android">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.64.18.96.04l13.1-7.26-2.83-2.83-11.23 10.05zm-1.8-20.4C1.14 3.7 1 4.08 1 4.56v14.88c0 .48.14.86.38 1.12l.06.06L9.37 12v-.18L1.44 3.3l-.06.06zm19.1 8.88l-2.75-1.52-3.14 3.14 3.14 3.14 2.77-1.54c.79-.44.79-1.16-.02-1.22zM4.14.24L17.24 7.5l-2.83 2.83L3.18.28C2.86.14 2.52.15 2.22.32l-.04-.08z"/></svg>
+        Google Play</a>` : ''
+    ].join('');
+
+    card.innerHTML = `
+      <img class="store-game-logo" src="${g.logo || ''}" alt="${g.name}" onerror="this.style.background='var(--bg3)'">
+      <div class="store-game-info">
+        <div class="store-game-genre">${g.genre}</div>
+        <div class="store-game-name">${g.name}</div>
+        <div class="store-game-desc">${g.desc}</div>
+        <div class="store-badges">${badges}</div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
 // ─── OYUN VERİSİ ───────────────────────────────────────────────
 // KULLANIM: src alanına Unity WebGL derlemenizin URL'ini yazın.
 // Boş bırakırsanız placeholder ekranı gösterilir.
@@ -1080,6 +1234,7 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.3 });
 
 // ─── INIT ────────────────────────────────────────────────────
+renderStoreGames();
 renderGames();
 observer.observe(document.getElementById('about'));
 </script>
