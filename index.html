@@ -906,20 +906,20 @@
 <nav>
   <a href="#hero" class="nav-logo">GAME<span>FORGE</span></a>
   <ul class="nav-links">
-    <li><a href="#games">// OYUNLAR</a></li>
-    <li><a href="#about">// HAKKIMDA</a></li>
-    <li><a href="#contact">// İLETİŞİM</a></li>
+    <li><a href="#games">// GAMES</a></li>
+    <li><a href="#about">// ABOUT</a></li>
+    <li><a href="#contact">// CONTACT</a></li>
   </ul>
-  <a href="#contact" class="nav-cta">İLETİŞİME GEÇ</a>
-  <button class="hamburger" onclick="toggleMenu()" aria-label="Menü">
+  <a href="#contact" class="nav-cta">CONTACT</a>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#games" onclick="toggleMenu()">// OYUNLAR</a>
-  <a href="#about" onclick="toggleMenu()">// HAKKIMDA</a>
-  <a href="#contact" onclick="toggleMenu()">// İLETİŞİM</a>
+  <a href="#games" onclick="toggleMenu()">// GAMES</a>
+  <a href="#about" onclick="toggleMenu()">// ABOUT</a>
+  <a href="#contact" onclick="toggleMenu()">// CONTACT</a>
 </div>
 
 <!-- HERO -->
@@ -927,8 +927,8 @@
   <div class="hero-glow"></div>
   <img src="logo.png" alt="Company Logo" class="hero-logo">
   <div class="hero-btns">
-    <a href="#games" class="btn-primary">Oyunları Keşfet ↓</a>
-    <a href="#about" class="btn-ghost">Kim bu geliştirici?</a>
+    <a href="#games" class="btn-primary">View Games ↓</a>
+    <a href="#about" class="btn-ghost">About Me</a>
   </div>
   <div class="hero-scroll">
     <span>SCROLL</span>
@@ -939,8 +939,8 @@
 <!-- GAMES -->
 <section id="games">
   <div class="section-header">
-    <div class="section-tag">// 01 KOLEKSİYON</div>
-    <h2 class="section-title">Koleksiyonum</h2>
+    <div class="section-tag">// 01 COLLECTION</div>
+    <h2 class="section-title">My Games</h2>
   </div>
 
   <div class="collection-block">
@@ -958,10 +958,10 @@
 <section id="about">
   <div class="about-inner">
     <div class="about-text">
-      <span class="section-tag">// 02 HAKKIMDA</span>
-      <h2 class="section-title">Kod yazan,<br>oyun düşünen.</h2>
-      <p>Merhaba! Ben bağımsız bir Unity geliştiricisiyim. Oyunları sadece oynamak değil, onları sıfırdan inşa etmek beni heyecanlandırıyor.</p>
-      <p>Mekanik tasarımdan shader yazımına, level design'dan ses entegrasyonuna kadar tek başıma eksiksiz deneyimler üretiyorum.</p>
+      <span class="section-tag">// 02 ABOUT</span>
+      <h2 class="section-title">Indie game<br>developer.</h2>
+      <p>Hi! I'm an independent Unity developer. I work on games across mobile and web platforms.</p>
+      <p>I handle game design, programming, and art direction — from early prototype to final release.</p>
     </div>
     <div class="about-skills">
       <span class="skill-chip">Unity & C#</span>
@@ -975,11 +975,11 @@
 
 <!-- CONTACT -->
 <section id="contact">
-  <div class="section-tag">// 03 İLETİŞİM</div>
-  <h2 class="section-title">Bir fikrin mi var?<br>Konuşalım.</h2>
-  <p>Kolaborasyon, iş teklifi ya da sadece oyunlar hakkında sohbet etmek için ulaşabilirsin.</p>
+  <div class="section-tag">// 03 CONTACT</div>
+  <h2 class="section-title">Get in Touch</h2>
+  <p>Feel free to reach out for collaborations, questions, or just to talk games.</p>
   <div class="contact-links">
-    <a href="mailto:sen@ornek.com" class="contact-link">✉ E-POSTA</a>
+    <a href="mailto:sen@ornek.com" class="contact-link">✉ EMAIL</a>
     <a href="https://twitter.com" target="_blank" class="contact-link">🐦 TWITTER</a>
     <a href="https://github.com" target="_blank" class="contact-link">⌨ GITHUB</a>
     <a href="https://itch.io" target="_blank" class="contact-link">🎮 ITCH.IO</a>
@@ -988,7 +988,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <p>© 2024 <span>GAMEFORGE</span> — Tüm hakları saklıdır. Unity ile ♥ ile yapıldı.</p>
+  <p>© 2025 <span>GAMEFORGE</span> — Made with Unity.</p>
 </footer>
 
 <!-- MODAL -->
@@ -1010,8 +1010,8 @@
     <div class="modal-footer">
       <div class="modal-tags" id="modalTags"></div>
       <div class="modal-footer-right">
-        <a id="modalItchLink" href="#" target="_blank" class="btn-sm">🔗 ITCH.IO'DA AÇ</a>
-        <button class="btn-sm accent" onclick="closeModal()">✕ KAPAT</button>
+        <a id="modalItchLink" href="#" target="_blank" class="btn-sm">🔗 OPEN ON ITCH.IO</a>
+        <button class="btn-sm accent" onclick="closeModal()">✕ CLOSE</button>
       </div>
     </div>
   </div>
@@ -1025,7 +1025,7 @@ const storeGames = [
   {
     name: "ALRIGHT, CHEF!",
     genre: "CASUAL / COOKING",
-    desc: "Siparişler gelmeye devam ediyor, mutfak kaos içinde! Tarifleri takip et, zamanında yetiş.",
+    desc: "Orders keep coming and the kitchen is chaos. Follow the recipes and serve on time.",
     logo: "images/alright-chef.png",
     appStoreUrl: "https://apps.apple.com/tr/app/alright-chef/id6756134625?l=tr",
     playStoreUrl: ""
@@ -1033,7 +1033,7 @@ const storeGames = [
   {
     name: "GRAVITAS MATCH",
     genre: "PUZZLE / MATCH",
-    desc: "Yerçekimini kullanarak eşleştir, kombolar yap ve bulmacaları çöz.",
+    desc: "Use gravity to match tiles, chain combos and solve puzzles.",
     logo: "images/gravitas-match.png",
     appStoreUrl: "https://apps.apple.com/tr/app/gravitas-match/id6756153570?l=tr",
     playStoreUrl: ""
@@ -1043,7 +1043,7 @@ const storeGames = [
 function renderStoreGames() {
   const list = document.getElementById('storeGamesList');
   if (storeGames.length === 0) {
-    list.innerHTML = '<p style="font-family:var(--font-m);font-size:0.72rem;color:var(--muted);">Yakında...</p>';
+    list.innerHTML = '<p style="font-family:var(--font-m);font-size:0.72rem;color:var(--muted);">Coming soon...</p>';
     return;
   }
   storeGames.forEach(g => {
@@ -1080,11 +1080,11 @@ const games = [
     id: 1,
     name: "ALRIGHT, CHEF!",
     genre: "CASUAL / COOKING",
-    desc: "Siparişler gelmeye devam ediyor, mutfak kaos içinde! Tarifleri takip et, zamanında yetiş.",
+    desc: "Orders keep coming and the kitchen is chaos. Follow the recipes and serve on time.",
     icon: "🍳",
     tags: ["CASUAL", "COOKING", "TIME MANAGEMENT"],
     badge: "featured",
-    badgeText: "⭐ ÖNE ÇIKAN",
+    badgeText: "⭐ FEATURED",
     itchUrl: "https://itch.io",
     src: "GameBuild/index.html",
     bg: "linear-gradient(135deg, #1a0a00 0%, #3e1a00 50%, #2e0a00 100%)"
@@ -1093,11 +1093,11 @@ const games = [
     id: 2,
     name: "NEON DUNGEON",
     genre: "ROGUELIKE / ACTION",
-    desc: "Her geçişte farklı bir zindan. Silahlara, yeteneklere dikkat et — çünkü ölüm kalıcı.",
+    desc: "A different dungeon every run. Choose your weapons wisely — death is permanent.",
     icon: "⚔️",
     tags: ["ROGUELIKE", "PERMADEATH", "DUNGEON"],
     badge: "new",
-    badgeText: "✨ YENİ",
+    badgeText: "✨ NEW",
     itchUrl: "https://itch.io",
     src: "",
     bg: "linear-gradient(135deg, #1a0a0a 0%, #2e0a2e 50%, #1a1a0a 100%)"
@@ -1106,7 +1106,7 @@ const games = [
     id: 3,
     name: "GRAVITY SHIFT",
     genre: "PUZZLE / PLATFORM",
-    desc: "Yerçekimini tersine çevir, bulmacaları çöz. Fizik tabanlı platform mekaniği.",
+    desc: "Flip gravity to solve puzzles. Physics-based platformer mechanics.",
     icon: "🔮",
     tags: ["PUZZLE", "PHYSICS", "PLATFORM"],
     badge: null,
@@ -1117,8 +1117,8 @@ const games = [
   {
     id: 4,
     name: "PIXEL WARS",
-    genre: "STRATEJI / TOWER DEFENSE",
-    desc: "Piksel ordularını yönet, kuleleri yükselt, dalgaları durdur. Sonsuz mod desteği ile.",
+    genre: "STRATEGY / TOWER DEFENSE",
+    desc: "Manage pixel armies, upgrade towers and hold off the waves.",
     icon: "🏰",
     tags: ["STRATEGY", "TOWER DEFENSE", "WAVES"],
     badge: "wip",
@@ -1131,7 +1131,7 @@ const games = [
     id: 5,
     name: "DEEP SIGNAL",
     genre: "HORROR / EXPLORATION",
-    desc: "Terk edilmiş bir deniz altı araştırma istasyonu. Sessizlik en büyük düşmanın.",
+    desc: "An abandoned underwater research station. The silence is the worst part.",
     icon: "🦑",
     tags: ["HORROR", "EXPLORATION", "ATMOSPHERE"],
     badge: null,
@@ -1171,7 +1171,7 @@ function renderGames() {
         <div class="game-name">${g.name}</div>
         <div class="game-desc">${g.desc}</div>
         <div class="game-meta">${tagsHtml}</div>
-        ${i === 0 ? `<button class="game-play-btn">▶ OYNA</button>` : ''}
+        ${i === 0 ? `<button class="game-play-btn">▶ PLAY</button>` : ''}
       </div>
     `;
     grid.appendChild(card);
@@ -1197,12 +1197,12 @@ function openModal(game) {
         <div class="big-icon">${game.icon}</div>
         <h3>${game.name}</h3>
         <p>
-          Unity WebGL dosyalarınızı yükleyin ve<br>
-          <code>games</code> dizisindeki <code>src</code> alanını doldurun.<br><br>
-          Örnek: <code>src: "https://siteniz.com/oyun/index.html"</code>
+          Upload your Unity WebGL build and<br>
+          fill in the <code>src</code> field in the <code>games</code> array.<br><br>
+          Example: <code>src: "https://yoursite.com/game/index.html"</code>
         </p>
         <a href="${game.itchUrl}" target="_blank" class="btn-primary" style="text-decoration:none; font-family: var(--font-m); font-size: 0.75rem;">
-          🔗 ITCH.IO'DA OYNA
+          🔗 PLAY ON ITCH.IO
         </a>
       </div>
     `;
