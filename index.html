@@ -285,9 +285,9 @@
 
   /* ─── HERO LOGO ─── */
   .hero-logo {
-    max-height: 340px;
-    max-width: 640px;
-    width: 70%;
+    max-height: 420px;
+    max-width: 100%;
+    width: 100%;
     object-fit: contain;
     margin-bottom: 2.5rem;
     animation: fadeUp 0.8s ease both;
@@ -981,9 +981,6 @@
   <p>Feel free to reach out for collaborations, questions, or just to talk games.</p>
   <div class="contact-links">
     <a href="mailto:sen@ornek.com" class="contact-link">✉ EMAIL</a>
-    <a href="https://twitter.com" target="_blank" class="contact-link">🐦 TWITTER</a>
-    <a href="https://github.com" target="_blank" class="contact-link">⌨ GITHUB</a>
-    <a href="https://itch.io" target="_blank" class="contact-link">🎮 ITCH.IO</a>
   </div>
 </section>
 
@@ -1011,7 +1008,6 @@
     <div class="modal-footer">
       <div class="modal-tags" id="modalTags"></div>
       <div class="modal-footer-right">
-        <a id="modalItchLink" href="#" target="_blank" class="btn-sm">🔗 OPEN ON ITCH.IO</a>
         <button class="btn-sm accent" onclick="closeModal()">✕ CLOSE</button>
       </div>
     </div>
@@ -1202,9 +1198,6 @@ function openModal(game) {
           fill in the <code>src</code> field in the <code>games</code> array.<br><br>
           Example: <code>src: "https://yoursite.com/game/index.html"</code>
         </p>
-        <a href="${game.itchUrl}" target="_blank" class="btn-primary" style="text-decoration:none; font-family: var(--font-m); font-size: 0.75rem;">
-          🔗 PLAY ON ITCH.IO
-        </a>
       </div>
     `;
   }
