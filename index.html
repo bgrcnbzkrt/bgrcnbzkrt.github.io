@@ -5,1219 +5,926 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BeeWolf Studios — Games</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg:       #0a0900;
-    --bg2:      #0f0d00;
-    --bg3:      #141200;
-    --surface:  #1a1700;
-    --border:   rgba(255,208,0,0.15);
-    --accent:   #ffd000;
-    --accent2:  #ff9500;
-    --accent3:  #ffe566;
-    --text:     #eee8d0;
-    --muted:    #7a6e50;
-    --card-r:   16px;
-    --font-h:   'Syne', sans-serif;
-    --font-m:   'Space Mono', monospace;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-h);
-    overflow-x: hidden;
-    min-height: 100vh;
-  }
-
-  /* ─── NOISE OVERLAY ─── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.6;
-  }
-
-  /* ─── GRID LINES ─── */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,208,0,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,208,0,0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ─── NAV ─── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
-    height: 64px;
-    background: rgba(10,9,0,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .nav-logo {
-    font-family: var(--font-h);
-    font-weight: 800;
-    font-size: 1.1rem;
-    letter-spacing: 0.08em;
-    color: var(--text);
-    text-decoration: none;
-  }
-
-  .nav-logo span { color: var(--accent); }
-
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-family: var(--font-m);
-    font-size: 0.72rem;
-    color: var(--muted);
-    text-decoration: none;
-    letter-spacing: 0.05em;
-    transition: color 0.2s;
-  }
-
-  .nav-links a:hover { color: var(--accent3); }
-
-  .nav-cta {
-    font-family: var(--font-m);
-    font-size: 0.72rem;
-    padding: 8px 18px;
-    border: 1px solid var(--accent);
-    border-radius: 6px;
-    color: var(--accent);
-    text-decoration: none;
-    letter-spacing: 0.06em;
-    transition: background 0.2s, color 0.2s;
-  }
-
-  .nav-cta:hover { background: var(--accent); color: #fff; }
-
-  .hamburger {
-    display: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    flex-direction: column;
-    gap: 5px;
-    padding: 4px;
-  }
-
-  .hamburger span {
-    display: block;
-    width: 24px;
-    height: 2px;
-    background: var(--text);
-    border-radius: 2px;
-    transition: transform 0.3s, opacity 0.3s;
-  }
-
-  .mobile-menu {
-    display: none;
-    position: fixed;
-    top: 64px; left: 0; right: 0;
-    background: rgba(10,10,15,0.97);
-    backdrop-filter: blur(20px);
-    z-index: 999;
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid var(--border);
-    flex-direction: column;
-    gap: 1.2rem;
-  }
-
-  .mobile-menu.open { display: flex; }
-  .mobile-menu a {
-    color: var(--text);
-    text-decoration: none;
-    font-family: var(--font-m);
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
-  }
-
-  /* ─── HERO ─── */
-  #hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 80px 2rem 4rem;
-    overflow: hidden;
-    z-index: 1;
-  }
-
-  .hero-glow {
-    position: absolute;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,208,0,0.18) 0%, transparent 70%);
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-
-  .hero-tag {
-    display: inline-block;
-    font-family: var(--font-m);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    color: var(--accent3);
-    border: 1px solid rgba(99,255,218,0.3);
-    padding: 5px 14px;
-    border-radius: 100px;
-    margin-bottom: 1.5rem;
-    animation: fadeUp 0.8s ease both;
-  }
-
-  h1.hero-title {
-    font-size: clamp(2.8rem, 8vw, 6.5rem);
-    font-weight: 800;
-    line-height: 0.95;
-    letter-spacing: -0.02em;
-    margin-bottom: 1.5rem;
-    animation: fadeUp 0.9s 0.1s ease both;
-  }
-
-  h1.hero-title .line2 { color: var(--accent); }
-  h1.hero-title .line3 { color: var(--accent2); font-style: italic; }
-
-  .hero-desc {
-    max-width: 480px;
-    font-size: 1rem;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 2.5rem;
-    animation: fadeUp 0.9s 0.2s ease both;
-  }
-
-  .hero-btns {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    animation: fadeUp 0.9s 0.3s ease both;
-  }
-
-  .btn-primary {
-    padding: 14px 32px;
-    background: var(--accent);
-    color: #fff;
-    border-radius: 8px;
-    font-family: var(--font-m);
-    font-size: 0.78rem;
-    letter-spacing: 0.06em;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 0 32px rgba(255,208,0,0.35);
-  }
-
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(255,208,0,0.5); }
-
-  .btn-ghost {
-    padding: 14px 32px;
-    background: transparent;
-    color: var(--text);
-    border-radius: 8px;
-    font-family: var(--font-m);
-    font-size: 0.78rem;
-    letter-spacing: 0.06em;
-    text-decoration: none;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-  }
-
-  .btn-ghost:hover { border-color: var(--muted); color: var(--accent3); }
-
-  .hero-scroll {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    animation: fadeUp 1s 0.6s ease both;
-  }
-
-  .hero-scroll span {
-    font-family: var(--font-m);
-    font-size: 0.6rem;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-  }
-
-  .scroll-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(to bottom, var(--muted), transparent);
-    animation: scrollPulse 1.8s ease-in-out infinite;
-  }
-
-  /* ─── HERO LOGO ─── */
-  .hero-logo {
-    max-height: 420px;
-    max-width: 100%;
-    width: 100%;
-    object-fit: contain;
-    margin-bottom: 2.5rem;
-    animation: fadeUp 0.8s ease both;
-  }
-
-  /* ─── SECTIONS ─── */
-  section { position: relative; z-index: 1; }
-
-  .section-header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-
-  .section-tag {
-    display: inline-block;
-    font-family: var(--font-m);
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    color: var(--accent);
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-  }
-
-  .section-title {
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 800;
-    line-height: 1.1;
-  }
-
-  /* ─── GAMES GRID ─── */
-  #games {
-    padding: 6rem 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .collection-block {
-    margin-bottom: 4rem;
-  }
-
-  .collection-label {
-    font-family: var(--font-m);
-    font-size: 0.65rem;
-    letter-spacing: 0.18em;
-    color: var(--accent3);
-    border-left: 2px solid var(--accent3);
-    padding-left: 0.75rem;
-    margin-bottom: 1.5rem;
-  }
-
-  /* ─── STORE GAME CARDS ─── */
-  .store-games-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .store-game-card {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    background: linear-gradient(135deg, var(--surface) 0%, rgba(30,26,0,0.9) 100%);
-    border: 1px solid rgba(255,208,0,0.35);
-    border-radius: var(--card-r);
-    padding: 1.5rem;
-    position: relative;
-    box-shadow: 0 0 18px rgba(255,208,0,0.08), inset 0 1px 0 rgba(255,208,0,0.1);
-    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
-  }
-
-  .store-game-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: var(--card-r);
-    border-left: 3px solid var(--accent);
-    opacity: 0.7;
-    pointer-events: none;
-  }
-
-  .store-game-card:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 1px rgba(255,208,0,0.3), 0 8px 48px rgba(255,208,0,0.22);
-    transform: translateY(-3px);
-  }
-
-  .store-game-logo {
-    width: 100px;
-    height: 100px;
-    border-radius: 22px;
-    object-fit: cover;
-    flex-shrink: 0;
-    background: var(--bg3);
-    border: 2px solid rgba(255,208,0,0.4);
-    box-shadow: 0 0 16px rgba(255,208,0,0.15);
-  }
-
-  .store-game-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .store-game-genre {
-    font-family: var(--font-m);
-    font-size: 0.62rem;
-    color: var(--accent3);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 0.3rem;
-  }
-
-  .store-game-name {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-
-  .store-game-desc {
-    font-size: 0.85rem;
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-
-  .store-badges {
-    display: flex;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-  }
-
-  .store-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 9px 18px;
-    border-radius: 8px;
-    background: #000;
-    color: #fff;
-    text-decoration: none;
-    font-family: var(--font-m);
-    font-size: 0.65rem;
-    letter-spacing: 0.05em;
-    border: 1px solid rgba(255,208,0,0.4);
-    box-shadow: 0 0 10px rgba(255,208,0,0.1);
-    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-  }
-
-  .store-badge:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 18px rgba(255,208,0,0.3);
-    transform: translateY(-1px);
-  }
-  .store-badge.android { background: #1a1a1a; }
-
-  .games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .game-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--card-r);
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-    position: relative;
-  }
-
-  .game-card:hover {
-    transform: translateY(-6px);
-    border-color: var(--accent);
-    box-shadow: 0 20px 60px rgba(255,208,0,0.2);
-  }
-
-  .game-card.featured {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .game-thumb {
-    position: relative;
-    aspect-ratio: 16/9;
-    overflow: hidden;
-    background: var(--bg3);
-  }
-
-  .game-card.featured .game-thumb {
-    aspect-ratio: auto;
-    min-height: 280px;
-  }
-
-  .game-thumb-bg {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 5rem;
-    transition: transform 0.4s;
-  }
-
-  .game-card:hover .game-thumb-bg { transform: scale(1.08); }
-
-  .game-badge {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    font-family: var(--font-m);
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    padding: 4px 10px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    z-index: 2;
-  }
-
-  .badge-featured { background: var(--accent); color: #fff; }
-  .badge-new { background: var(--accent3); color: #111000; }
-  .badge-wip { background: rgba(255,107,107,0.2); color: var(--accent2); border: 1px solid rgba(255,107,107,0.3); }
-
-  .play-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255,208,0,0);
-    transition: background 0.3s;
-    z-index: 3;
-  }
-
-  .game-card:hover .play-overlay { background: rgba(255,208,0,0.15); }
-
-  .play-btn-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.95);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    opacity: 0;
-    transform: scale(0.7);
-    transition: opacity 0.3s, transform 0.3s;
-  }
-
-  .game-card:hover .play-btn-icon { opacity: 1; transform: scale(1); }
-
-  .game-info {
-    padding: 1.25rem;
-  }
-
-  .game-card.featured .game-info {
-    padding: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .game-genre {
-    font-family: var(--font-m);
-    font-size: 0.65rem;
-    color: var(--accent3);
-    letter-spacing: 0.1em;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-  }
-
-  .game-name {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    line-height: 1.2;
-  }
-
-  .game-card.featured .game-name { font-size: 2rem; }
-
-  .game-desc {
-    font-size: 0.85rem;
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-
-  .game-meta {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .game-tag {
-    font-family: var(--font-m);
-    font-size: 0.6rem;
-    letter-spacing: 0.08em;
-    padding: 3px 8px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--muted);
-  }
-
-  .game-play-btn {
-    margin-top: 1.5rem;
-    padding: 10px 24px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 7px;
-    font-family: var(--font-m);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    transition: box-shadow 0.2s, transform 0.2s;
-    align-self: flex-start;
-  }
-
-  .game-play-btn:hover { box-shadow: 0 4px 20px rgba(255,208,0,0.5); transform: translateY(-1px); }
-
-  /* ─── MODAL ─── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.88);
-    z-index: 5000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    backdrop-filter: blur(8px);
-  }
-
-  .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    width: 100%;
-    max-width: 1000px;
-    overflow: hidden;
-    position: relative;
-    animation: modalIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
-  }
-
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.1rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-  }
-
-  .modal-title-area { display: flex; align-items: center; gap: 0.75rem; }
-
-  .modal-game-icon { font-size: 1.5rem; }
-
-  .modal-game-name {
-    font-weight: 700;
-    font-size: 1rem;
-  }
-
-  .modal-game-genre {
-    font-family: var(--font-m);
-    font-size: 0.65rem;
-    color: var(--accent3);
-    letter-spacing: 0.08em;
-  }
-
-  .modal-close {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    font-size: 1.2rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s, color 0.2s;
-  }
-
-  .modal-close:hover { background: var(--accent2); color: #fff; border-color: var(--accent2); }
-
-  .modal-body {
-    padding: 0;
-  }
-
-  .iframe-wrapper {
-    position: relative;
-    width: 100%;
-    padding-top: 56.25%;
-    background: #000;
-  }
-
-  .iframe-wrapper iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
-
-  .iframe-placeholder {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg);
-    gap: 1.5rem;
-    padding: 2rem;
-    text-align: center;
-  }
-
-  .iframe-placeholder .big-icon { font-size: 4rem; }
-
-  .iframe-placeholder h3 {
-    font-size: 1.3rem;
-    font-weight: 700;
-  }
-
-  .iframe-placeholder p {
-    font-family: var(--font-m);
-    font-size: 0.75rem;
-    color: var(--muted);
-    max-width: 380px;
-    line-height: 1.7;
-    letter-spacing: 0.03em;
-  }
-
-  .iframe-placeholder code {
-    display: inline-block;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 2px 8px;
-    border-radius: 4px;
-    color: var(--accent3);
-    font-size: 0.7rem;
-  }
-
-  .modal-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 1.5rem;
-    border-top: 1px solid var(--border);
-    background: var(--surface);
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .modal-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-
-  .modal-footer-right { display: flex; gap: 0.75rem; }
-
-  .btn-sm {
-    padding: 7px 16px;
-    font-family: var(--font-m);
-    font-size: 0.65rem;
-    letter-spacing: 0.06em;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text);
-  }
-
-  .btn-sm:hover { border-color: var(--muted); }
-  .btn-sm.accent { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .btn-sm.accent:hover { box-shadow: 0 4px 16px rgba(255,208,0,0.4); }
-
-  /* ─── ABOUT ─── */
-  #about {
-    padding: 6rem 2rem;
-    background: var(--bg2);
-    border-top: 1px solid var(--border);
-  }
-
-  .about-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-  }
-
-  .about-text .section-tag { display: block; }
-  .about-text .section-title { text-align: left; margin-bottom: 1.25rem; }
-
-  .about-text p {
-    color: var(--muted);
-    line-height: 1.8;
-    font-size: 0.95rem;
-    margin-bottom: 1rem;
-  }
-
-  .about-skills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    align-content: flex-start;
-  }
-
-  .skill-chip {
-    font-family: var(--font-m);
-    font-size: 0.7rem;
-    letter-spacing: 0.06em;
-    padding: 7px 14px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    background: var(--surface);
-  }
-
-  /* ─── CONTACT ─── */
-  #contact {
-    padding: 6rem 2rem;
-    max-width: 700px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  #contact .section-title { margin-bottom: 1rem; }
-
-  #contact p {
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 2.5rem;
-    font-size: 0.95rem;
-  }
-
-  .contact-links {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .contact-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--text);
-    font-family: var(--font-m);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    transition: all 0.2s;
-    background: var(--surface);
-  }
-
-  .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
-
-  /* ─── FOOTER ─── */
-  footer {
-    position: relative;
-    z-index: 1;
-    border-top: 1px solid var(--border);
-    background: var(--bg2);
-    padding: 2rem;
-    text-align: center;
-    font-family: var(--font-m);
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-  }
-
-  footer span { color: var(--accent); }
-
-  /* ─── ANIMATIONS ─── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.4; transform: scaleY(1); }
-    50%       { opacity: 1;   transform: scaleY(1.2); }
-  }
-
-  @keyframes modalIn {
-    from { opacity: 0; transform: scale(0.92) translateY(20px); }
-    to   { opacity: 1; transform: scale(1) translateY(0); }
-  }
-
-  /* ─── RESPONSIVE ─── */
-  @media (max-width: 768px) {
-    .nav-links, .nav-cta { display: none; }
-    .hamburger { display: flex; }
-
-    .game-card.featured {
-      grid-column: auto;
-      display: block;
-    }
-
-    .game-card.featured .game-thumb { min-height: 200px; }
-    .game-card.featured .game-info { padding: 1.25rem; }
-    .game-card.featured .game-name { font-size: 1.4rem; }
-
-    .games-grid { grid-template-columns: 1fr; }
-
-    .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-    .about-text .section-title { text-align: center; }
-    .about-text .section-tag { text-align: center; }
-
-    .stats-bar { flex-wrap: wrap; }
-    .stat { flex: 1 1 50%; border-right: none; border-bottom: 1px solid var(--border); }
-  }
-
-  @media (max-width: 480px) {
-    h1.hero-title { font-size: 2.4rem; }
-    .modal-footer { flex-direction: column; align-items: flex-start; }
-  }
+:root {
+  --bg:        #0A0907;
+  --bg-2:      #100E0B;
+  --bg-3:      #16130F;
+  --line:      rgba(255,236,200,0.10);
+  --line-2:    rgba(255,236,200,0.18);
+  --fg:        #F2EBDD;
+  --fg-dim:    #A39A88;
+  --fg-faint:  #645D52;
+  --accent:    #FFB347;
+  --accent-2:  #FFD089;
+  --accent-glow: oklch(0.82 0.17 65 / 0.35);
+
+  --serif:  'Cormorant Garamond', 'Times New Roman', serif;
+  --sans:   'Space Grotesk', system-ui, sans-serif;
+  --mono:   'JetBrains Mono', ui-monospace, monospace;
+
+  --pad-x:  clamp(20px, 5vw, 80px);
+  --rule:   1px solid var(--line);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { font: inherit; background: none; border: 0; color: inherit; cursor: pointer; }
+::selection { background: var(--accent); color: var(--bg); }
+
+/* ---------- Film grain ---------- */
+.grain {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 100;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>");
+}
+
+/* ---------- Nav ---------- */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px var(--pad-x);
+  background: linear-gradient(to bottom, rgba(10,9,7,0.9), rgba(10,9,7,0));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: padding .3s ease, background .3s ease;
+}
+.nav.is-scrolled {
+  padding: 12px var(--pad-x);
+  background: rgba(10,9,7,0.85);
+  border-bottom: var(--rule);
+}
+.nav__brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+}
+.nav__dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%     { opacity: .55; transform: scale(.85); }
+}
+.nav__links {
+  display: flex; gap: 36px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+}
+.nav__links a {
+  position: relative; padding: 6px 0;
+  color: var(--fg-dim); transition: color .25s ease;
+}
+.nav__links a:hover { color: var(--fg); }
+.nav__links a::after {
+  content: ''; position: absolute; left: 0; bottom: 0;
+  width: 0; height: 1px; background: var(--accent);
+  transition: width .3s ease;
+}
+.nav__links a:hover::after { width: 100%; }
+.nav__links .num { color: var(--fg-faint); margin-right: 8px; font-size: 10px; }
+.nav__cta {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+  padding: 9px 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  transition: all .25s ease;
+}
+.nav__cta:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-glow);
+}
+.nav__cta span { margin-left: 6px; }
+@media (max-width: 720px) {
+  .nav__links { display: none; }
+  .nav__cta   { display: none; }
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex; flex-direction: column;
+  padding: 0 var(--pad-x);
+  border-bottom: var(--rule);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255,179,71,0.06), transparent 60%),
+    var(--bg);
+}
+.hero__rule {
+  display: flex; justify-content: space-between;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.22em;
+  color: var(--fg-faint);
+}
+.hero__rule--top { padding: 90px 0 0; }
+.hero__rule--bot {
+  margin-top: auto;
+  padding: 0 0 28px;
+  align-items: center;
+}
+.hero__inner {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 60px 0 40px;
+}
+.hero__eyebrow {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+  color: var(--fg-dim);
+  margin-bottom: 36px;
+  animation: fadeUp .9s .1s both;
+}
+.hero__eyebrow .dash { width: 32px; height: 1px; background: var(--accent); }
+.hero__logo-wrap {
+  margin-bottom: 40px;
+  animation: fadeUp .9s .25s both;
+  position: relative;
+}
+.hero__logo-wrap::before {
+  content: ''; position: absolute; inset: -40px;
+  background: radial-gradient(circle, var(--accent-glow), transparent 60%);
+  filter: blur(40px); z-index: -1;
+}
+.hero__logo {
+  width: clamp(140px, 20vw, 220px);
+  height: auto;
+  filter: drop-shadow(0 0 20px var(--accent-glow));
+}
+.hero__title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(48px, 9vw, 132px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin-bottom: 32px;
+}
+.hero__title .line {
+  display: block;
+  animation: fadeUp 1s both;
+}
+.hero__title .line:nth-child(1) { animation-delay: .35s; }
+.hero__title .line:nth-child(2) { animation-delay: .5s; }
+.hero__title .line:nth-child(3) { animation-delay: .65s; }
+.hero__title em { font-style: italic; color: var(--accent); font-weight: 500; }
+.hero__sub {
+  max-width: 540px;
+  font-size: 16px;
+  color: var(--fg-dim);
+  margin-bottom: 44px;
+  animation: fadeUp 1s .8s both;
+}
+.hero__cta-row {
+  display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 1s .95s both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.scroll-indicator {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--fg-dim);
+}
+.scroll-line {
+  display: inline-block;
+  width: 1px; height: 28px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollDrop 2s ease-in-out infinite;
+}
+@keyframes scrollDrop {
+  0%   { transform: translateY(-8px) scaleY(0.4); opacity: 0; }
+  50%  { opacity: 1; }
+  100% { transform: translateY(8px) scaleY(1); opacity: 0; }
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 24px;
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  transition: all .3s ease;
+}
+.btn--primary { background: var(--accent); color: var(--bg); }
+.btn--primary:hover {
+  background: var(--accent-2);
+  box-shadow: 0 0 0 6px var(--accent-glow);
+  transform: translateY(-1px);
+}
+.btn--ghost { border: 1px solid var(--line-2); color: var(--fg); }
+.btn--ghost:hover {
+  border-color: var(--fg);
+  background: rgba(255,236,200,0.04);
+}
+
+/* ---------- Sections ---------- */
+.section {
+  padding: clamp(80px, 12vw, 160px) var(--pad-x);
+  border-bottom: var(--rule);
+  position: relative;
+}
+.section__head {
+  margin-bottom: 64px;
+  max-width: 900px;
+}
+.section__num {
+  display: inline-block;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+  color: var(--accent);
+  margin-bottom: 24px;
+}
+.section__title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(40px, 7vw, 96px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+.section__title em { font-style: italic; color: var(--accent); }
+.section__lede {
+  font-size: 17px;
+  color: var(--fg-dim);
+  max-width: 560px;
+}
+
+/* ---------- Tabs ---------- */
+.tabs {
+  display: flex; gap: 4px;
+  margin-top: 32px;
+  border-bottom: var(--rule);
+  width: fit-content;
+}
+.tab {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 14px 20px;
+  color: var(--fg-faint);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .25s ease, border-color .25s ease;
+}
+.tab:hover { color: var(--fg-dim); }
+.tab.is-active { color: var(--fg); border-bottom-color: var(--accent); }
+
+/* ---------- Games grid ---------- */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.games-grid.is-hidden { display: none; }
+@media (max-width: 960px) { .games-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 620px) { .games-grid { grid-template-columns: 1fr; } }
+
+.game-card {
+  position: relative;
+  display: flex; flex-direction: column;
+  background: var(--bg-2);
+  border: var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform .4s ease, border-color .4s ease;
+}
+.game-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--line-2);
+}
+.game-card--clickable { cursor: pointer; }
+
+/* Media area */
+.game-card__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--bg-3);
+}
+.game-card__poster,
+.game-card__preview {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+  color: var(--fg-faint);
+  transition: opacity .5s ease, transform .8s ease;
+}
+
+/* Default striped poster (placeholder) */
+.game-card__poster {
+  background-image:
+    repeating-linear-gradient(45deg,
+      rgba(255,236,200,0.025) 0, rgba(255,236,200,0.025) 1px,
+      transparent 1px, transparent 12px);
+  background-color: var(--bg-3);
+}
+.game-card__poster::before { content: attr(data-label); }
+
+/* Art poster: actual game image */
+.game-card__poster--art {
+  background-image: none;
+  background-color: var(--bg-3);
+}
+.game-card__poster--art::before { display: none; }
+.game-card__poster--art img {
+  width: 120px; height: 120px;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  position: relative;
+  z-index: 1;
+}
+/* Ambient glow behind icon */
+.game-card__poster--art::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 55%, rgba(255,179,71,0.10), transparent 70%);
+  pointer-events: none;
+}
+
+/* Game-specific poster backgrounds */
+.game-card__poster--chef   { background: linear-gradient(135deg, #1a0a00, #3e1a00 50%, #1a0a00); }
+.game-card__poster--gravitas { background: linear-gradient(135deg, #060a18, #0e1a3a 50%, #060a18); }
+.game-card__poster--demo   { background: linear-gradient(135deg, #0a0a00, #1e1a00 50%, #0a0600); }
+
+/* Preview hover layer */
+.game-card__preview {
+  opacity: 0;
+  background-image:
+    repeating-linear-gradient(0deg,
+      rgba(255,179,71,0.06) 0, rgba(255,179,71,0.06) 1px,
+      transparent 1px, transparent 4px),
+    radial-gradient(ellipse at 30% 40%, rgba(255,179,71,0.15), transparent 60%),
+    radial-gradient(ellipse at 70% 70%, rgba(255,179,71,0.10), transparent 50%);
+  background-color: #1a1612;
+  background-size: 100% 4px, 100% 100%, 100% 100%;
+  animation: scan 4s linear infinite paused;
+}
+.game-card__preview::before {
+  content: '▶ ' attr(data-label);
+  background: rgba(0,0,0,0.4);
+  padding: 6px 12px;
+  border: 1px solid var(--line-2);
+  color: var(--accent);
+  font-size: 10px;
+}
+@keyframes scan {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to   { background-position: 0 60px, 0 0, 0 0; }
+}
+.game-card:hover .game-card__poster { opacity: 0; transform: scale(1.05); }
+.game-card:hover .game-card__preview { opacity: 1; animation-play-state: running; }
+
+/* Play icon for demo cards */
+.game-card__play-icon {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.game-card__play-icon::after {
+  content: '▶';
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.95);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  color: var(--bg);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.game-card:hover .game-card__play-icon { opacity: 1; }
+
+.game-card__badge {
+  position: absolute; top: 14px; left: 14px;
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: 2px;
+  z-index: 2;
+}
+.game-card__badge--demo {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.game-card__meta {
+  padding: 24px 22px 26px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.game-card__meta h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.game-card__tags {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em;
+  color: var(--fg-faint);
+  text-transform: uppercase;
+}
+.game-card__desc {
+  font-size: 14px;
+  color: var(--fg-dim);
+  margin-top: 6px;
+}
+.game-card__link {
+  margin-top: 14px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+  color: var(--accent);
+  align-self: flex-start;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border-color .25s ease;
+  display: inline-block;
+}
+.game-card__link:hover { border-bottom-color: var(--accent); }
+
+/* Store badges */
+.store-badges {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-top: 14px;
+}
+.store-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--line-2);
+  border-radius: 6px;
+  color: var(--fg);
+  transition: border-color .2s, background .2s, transform .2s;
+}
+.store-badge:hover {
+  border-color: var(--accent);
+  background: rgba(255,179,71,0.08);
+  transform: translateY(-1px);
+}
+.store-badge svg { flex-shrink: 0; }
+
+/* ---------- About ---------- */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 80px;
+  margin-bottom: 100px;
+}
+@media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; gap: 50px; } }
+
+.about-copy .lead {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.35;
+  color: var(--fg);
+  margin-bottom: 28px;
+  text-wrap: pretty;
+}
+.about-copy p {
+  font-size: 16.5px;
+  color: var(--fg-dim);
+  margin-bottom: 18px;
+  max-width: 56ch;
+  text-wrap: pretty;
+}
+.about-side {
+  border-left: var(--rule);
+  padding-left: 32px;
+}
+.meta-list { display: grid; gap: 22px; }
+.meta-list > div {
+  display: grid; grid-template-columns: 80px 1fr; gap: 20px;
+  align-items: baseline;
+  padding-bottom: 18px;
+  border-bottom: var(--rule);
+}
+.meta-list dt {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.2em;
+  color: var(--fg-faint);
+  text-transform: uppercase;
+}
+.meta-list dd {
+  font-family: var(--serif);
+  font-size: 19px;
+}
+.dot-live {
+  display: inline-block;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent);
+  margin-right: 10px;
+  box-shadow: 0 0 8px var(--accent-glow);
+  animation: pulse 2s ease-in-out infinite;
+  vertical-align: middle;
+}
+.stack {
+  border-top: var(--rule);
+  padding-top: 40px;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 40px;
+}
+@media (max-width: 720px) { .stack { grid-template-columns: 1fr; gap: 18px; } }
+.stack__label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+  color: var(--fg-faint);
+}
+.stack__list {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  list-style: none;
+}
+.stack__list li {
+  font-family: var(--serif);
+  font-size: 22px;
+  padding: 8px 18px;
+  border: var(--rule);
+  border-radius: 999px;
+  transition: all .25s ease;
+}
+.stack__list li:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- Contact ---------- */
+.section--contact { text-align: left; }
+.contact__title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(36px, 5.5vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  max-width: 18ch;
+  margin-bottom: 60px;
+  text-wrap: balance;
+}
+.contact__email {
+  display: flex; flex-direction: column;
+  gap: 10px;
+  padding: 36px 0;
+  border-top: var(--rule);
+  border-bottom: var(--rule);
+  transition: padding .3s ease;
+}
+.contact__email:hover { padding-left: 12px; }
+.contact__email-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+  color: var(--fg-faint);
+  text-transform: uppercase;
+}
+.contact__email-addr {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 52px);
+  letter-spacing: -0.01em;
+  display: flex; align-items: center; gap: 18px;
+  color: var(--fg);
+  transition: color .3s ease;
+}
+.contact__email:hover .contact__email-addr { color: var(--accent); }
+.contact__email .arrow { font-size: 0.8em; }
+
+/* ---------- Footer ---------- */
+.foot {
+  padding: 28px var(--pad-x);
+  display: flex; justify-content: space-between;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.18em;
+  color: var(--fg-faint);
+  text-transform: uppercase;
+}
+.foot__mid { color: var(--fg-dim); }
+@media (max-width: 720px) {
+  .foot { flex-direction: column; gap: 10px; align-items: flex-start; }
+}
+
+/* ---------- Modal ---------- */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 5000;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(10px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg-2);
+  border: var(--rule);
+  border-radius: 8px;
+  width: 100%; max-width: 1000px;
+  overflow: hidden;
+  position: relative;
+  animation: modalIn .35s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: var(--rule);
+  background: var(--bg-3);
+}
+.modal-title {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+  color: var(--fg-dim);
+  text-transform: uppercase;
+}
+.modal-close {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  color: var(--fg-dim);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.modal-close:hover {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+.iframe-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  background: #000;
+}
+.iframe-wrapper iframe {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border: none;
+}
+
+/* ---------- Reveal on scroll ---------- */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
+.reveal.is-in { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="#hero" class="nav-logo">BEEWOLF<span> STUDIOS</span></a>
-  <ul class="nav-links">
-    <li><a href="#games">// GAMES</a></li>
-    <li><a href="#about">// ABOUT</a></li>
-    <li><a href="#contact">// CONTACT</a></li>
-  </ul>
-  <a href="#contact" class="nav-cta">CONTACT</a>
-  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
+<div class="grain" aria-hidden="true"></div>
 
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#games" onclick="toggleMenu()">// GAMES</a>
-  <a href="#about" onclick="toggleMenu()">// ABOUT</a>
-  <a href="#contact" onclick="toggleMenu()">// CONTACT</a>
-</div>
+<!-- NAV -->
+<header class="nav" id="nav">
+  <a href="#hero" class="nav__brand">
+    <span class="nav__dot"></span>
+    <span class="nav__name">BEEWOLF STUDIOS</span>
+  </a>
+  <nav class="nav__links">
+    <a href="#games"><span class="num">01</span>Games</a>
+    <a href="#about"><span class="num">02</span>About</a>
+    <a href="#contact"><span class="num">03</span>Contact</a>
+  </nav>
+  <a href="#contact" class="nav__cta">Get in touch <span>→</span></a>
+</header>
 
 <!-- HERO -->
-<section id="hero">
-  <div class="hero-glow"></div>
-  <img src="CompanyLogo.png" alt="BeeWolf Studios" class="hero-logo">
-  <div class="hero-btns">
-    <a href="#games" class="btn-primary">View Games ↓</a>
-    <a href="#about" class="btn-ghost">About Me</a>
+<section class="hero" id="hero">
+  <div class="hero__rule hero__rule--top">
+    <span>BEEWOLF / EST. 2024 / IST</span>
+    <span>INDIE GAME STUDIO</span>
   </div>
-  <div class="hero-scroll">
-    <span>SCROLL</span>
-    <div class="scroll-line"></div>
+
+  <div class="hero__inner">
+    <p class="hero__eyebrow"><span class="dash"></span> A solo studio crafting small worlds</p>
+    <div class="hero__logo-wrap">
+      <img src="CompanyLogo.png" alt="BeeWolf Studios" class="hero__logo">
+    </div>
+    <h1 class="hero__title">
+      <span class="line">Games made</span>
+      <span class="line"><em>by hand,</em></span>
+      <span class="line">one at a time.</span>
+    </h1>
+    <p class="hero__sub">Independent Unity developer working across mobile and web — design, code, art, all of it.</p>
+    <div class="hero__cta-row">
+      <a href="#games" class="btn btn--primary">View games <span>↓</span></a>
+      <a href="#about" class="btn btn--ghost">About the studio</a>
+    </div>
+  </div>
+
+  <div class="hero__rule hero__rule--bot">
+    <span class="scroll-indicator"><span class="scroll-line"></span> SCROLL</span>
+    <span>N 41.0° / E 28.9°</span>
   </div>
 </section>
 
 <!-- GAMES -->
-<section id="games">
-  <div class="section-header">
-    <h2 class="section-title">Games</h2>
+<section class="section section--games" id="games">
+  <header class="section__head reveal">
+    <span class="section__num">— 01 / GAMES</span>
+    <h2 class="section__title">Selected <em>works</em></h2>
+    <p class="section__lede">Mobile releases and browser demos. Built with Unity, shipped with care.</p>
+    <div class="tabs" role="tablist">
+      <button class="tab is-active" data-tab="releases">Releases</button>
+      <button class="tab" data-tab="demos">Demos</button>
+    </div>
+  </header>
+
+  <!-- RELEASES -->
+  <div class="games-grid" data-pane="releases">
+
+    <article class="game-card reveal">
+      <div class="game-card__media">
+        <div class="game-card__poster game-card__poster--art game-card__poster--chef">
+          <img src="images/alright-chef.png" alt="Alright, Chef!">
+        </div>
+        <div class="game-card__preview" data-label="COOKING / CASUAL"></div>
+        <span class="game-card__badge">Out now</span>
+      </div>
+      <div class="game-card__meta">
+        <h3>Alright, Chef!</h3>
+        <p class="game-card__tags">Mobile · Unity · Casual</p>
+        <p class="game-card__desc">Run your own restaurant, serve customers, earn stars and decorate your place to make it the best in town.</p>
+        <div class="store-badges">
+          <a href="https://apps.apple.com/tr/app/alright-chef/id6756134625?l=tr" target="_blank" class="store-badge">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            App Store
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <article class="game-card reveal">
+      <div class="game-card__media">
+        <div class="game-card__poster game-card__poster--art game-card__poster--gravitas">
+          <img src="images/gravitas-match.png" alt="Gravitas Match">
+        </div>
+        <div class="game-card__preview" data-label="PUZZLE / MATCH"></div>
+        <span class="game-card__badge">Out now</span>
+      </div>
+      <div class="game-card__meta">
+        <h3>Gravitas Match</h3>
+        <p class="game-card__tags">Mobile · Unity · Puzzle</p>
+        <p class="game-card__desc">Explore planets, discover unique combinations, complete levels and play fun mini-games across the galaxy.</p>
+        <div class="store-badges">
+          <a href="https://apps.apple.com/tr/app/gravitas-match/id6756153570?l=tr" target="_blank" class="store-badge">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            App Store
+          </a>
+        </div>
+      </div>
+    </article>
+
   </div>
 
-  <div class="collection-block">
-    <div class="collection-label">GAMES</div>
-    <div class="store-games-list" id="storeGamesList"></div>
-  </div>
+  <!-- DEMOS -->
+  <div class="games-grid is-hidden" data-pane="demos">
 
-  <div class="collection-block">
-    <div class="collection-label">DEMOS</div>
-    <div class="games-grid" id="gamesGrid"></div>
+    <article class="game-card game-card--clickable reveal" onclick="openModal()">
+      <div class="game-card__media">
+        <div class="game-card__poster game-card__poster--art game-card__poster--demo">
+          <img src="images/alright-chef.png" alt="Alright, Chef! — WebGL Demo">
+        </div>
+        <div class="game-card__preview" data-label="PLAY IN BROWSER"></div>
+        <div class="game-card__play-icon"></div>
+        <span class="game-card__badge game-card__badge--demo">Demo</span>
+      </div>
+      <div class="game-card__meta">
+        <h3>Alright, Chef!</h3>
+        <p class="game-card__tags">WebGL · Unity · Browser</p>
+        <p class="game-card__desc">Play the web build directly in your browser. No download needed — click to launch.</p>
+        <span class="game-card__link">Play demo →</span>
+      </div>
+    </article>
+
   </div>
 </section>
 
 <!-- ABOUT -->
-<section id="about">
-  <div class="about-inner">
-    <div class="about-text">
-      <h2 class="section-title">Indie game<br>developer.</h2>
-      <p>Hi! I'm an independent Unity developer. I work on games across mobile and web platforms.</p>
-      <p>I handle game design, programming, and art direction — from early prototype to final release.</p>
+<section class="section section--about" id="about">
+  <header class="section__head reveal">
+    <span class="section__num">— 02 / ABOUT</span>
+    <h2 class="section__title">Solo studio, <em>full stack</em>.</h2>
+  </header>
+
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <p class="lead">BeeWolf Studios is a one-person Unity practice. I take small games from first sketch to final build — design, code, art direction and release.</p>
+      <p>I focus on tight, replayable loops for mobile and the web. From early prototype to final release, I handle everything myself.</p>
+      <p>Open to collaborations on game jams, contract work, and small co-developed releases.</p>
     </div>
-    <div class="about-skills">
-      <span class="skill-chip">Unity & C#</span>
-      <span class="skill-chip">Shader Graph</span>
-      <span class="skill-chip">Game Design</span>
-      <span class="skill-chip">WebGL</span>
-      <span class="skill-chip">Blender / 3D</span>
-    </div>
+
+    <aside class="about-side reveal">
+      <dl class="meta-list">
+        <div><dt>Based</dt><dd>Istanbul, TR</dd></div>
+        <div><dt>Founded</dt><dd>2024</dd></div>
+        <div><dt>Roles</dt><dd>Design · Code · Art</dd></div>
+        <div><dt>Status</dt><dd><span class="dot-live"></span>Active</dd></div>
+      </dl>
+    </aside>
+  </div>
+
+  <div class="stack reveal">
+    <span class="stack__label">— Stack</span>
+    <ul class="stack__list">
+      <li>Unity</li>
+      <li>C#</li>
+      <li>Shader Graph</li>
+      <li>WebGL</li>
+      <li>Blender</li>
+      <li>Game Design</li>
+      <li>3D &amp; 2D</li>
+    </ul>
   </div>
 </section>
 
 <!-- CONTACT -->
-<section id="contact">
-  <h2 class="section-title">Get in Touch</h2>
-  <p>Feel free to reach out for collaborations, questions, or just to talk games.</p>
-  <div class="contact-links">
-    <a href="mailto:bgrcnbzkrt@gmail.com" class="contact-link">✉ EMAIL</a>
-  </div>
+<section class="section section--contact" id="contact">
+  <header class="section__head reveal">
+    <span class="section__num">— 03 / CONTACT</span>
+  </header>
+  <h2 class="contact__title reveal">Have an idea, a project, or just want to talk games?</h2>
+  <a href="mailto:bgrcnbzkrt@gmail.com" class="contact__email reveal">
+    <span class="contact__email-label">Drop a line</span>
+    <span class="contact__email-addr">bgrcnbzkrt@gmail.com<span class="arrow">↗</span></span>
+  </a>
 </section>
 
 <!-- FOOTER -->
-<footer>
-  <p>© 2025 <span>BEEWOLF STUDIOS</span> — Made with Unity.</p>
+<footer class="foot">
+  <span>© 2025 BEEWOLF STUDIOS</span>
+  <span class="foot__mid">Made with Unity · Coffee · Long nights</span>
+  <span>EST. 2024 / IST</span>
 </footer>
 
-<!-- MODAL -->
+<!-- MODAL (WebGL Demo) -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
   <div class="modal" id="modal">
     <div class="modal-header">
-      <div class="modal-title-area">
-        <span class="modal-game-icon" id="modalIcon"></span>
-        <div>
-          <div class="modal-game-name" id="modalName"></div>
-          <div class="modal-game-genre" id="modalGenre"></div>
-        </div>
-      </div>
+      <span class="modal-title">ALRIGHT, CHEF! — WEB DEMO</span>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="modal-body">
-      <div class="iframe-wrapper" id="iframeWrapper"></div>
-    </div>
-    <div class="modal-footer">
-      <div class="modal-tags" id="modalTags"></div>
-      <div class="modal-footer-right">
-        <button class="btn-sm accent" onclick="closeModal()">✕ CLOSE</button>
-      </div>
-    </div>
+    <div class="iframe-wrapper" id="iframeWrapper"></div>
   </div>
 </div>
 
 <script>
-// ─── STORE OYUNLARI ────────────────────────────────────────────
-// logo: oyun ikonunun dosya yolu (örn. "images/chef-icon.png")
-// appStoreUrl / playStoreUrl: boş bırakırsan o badge gözükmez
-const storeGames = [
-  {
-    name: "ALRIGHT, CHEF!",
-    genre: "CASUAL / COOKING",
-    desc: "Run your own restaurant, serve customers, earn stars and decorate your place to make it the best in town.",
-    logo: "images/alright-chef.png",
-    appStoreUrl: "https://apps.apple.com/tr/app/alright-chef/id6756134625?l=tr",
-    playStoreUrl: ""
-  },
-  {
-    name: "GRAVITAS MATCH",
-    genre: "PUZZLE / MATCH",
-    desc: "Explore planets, discover unique combinations, complete levels and play fun mini-games across the galaxy.",
-    logo: "images/gravitas-match.png",
-    appStoreUrl: "https://apps.apple.com/tr/app/gravitas-match/id6756153570?l=tr",
-    playStoreUrl: ""
-  },
-];
+(function () {
+  'use strict';
 
-function renderStoreGames() {
-  const list = document.getElementById('storeGamesList');
-  if (storeGames.length === 0) {
-    list.innerHTML = '<p style="font-family:var(--font-m);font-size:0.72rem;color:var(--muted);">Coming soon...</p>';
-    return;
-  }
-  storeGames.forEach(g => {
-    const card = document.createElement('div');
-    card.className = 'store-game-card';
+  // Sticky nav
+  const nav = document.getElementById('nav');
+  const onScroll = () => {
+    nav.classList.toggle('is-scrolled', window.scrollY > 24);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
-    const badges = [
-      g.appStoreUrl ? `<a href="${g.appStoreUrl}" target="_blank" class="store-badge ios">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-        App Store</a>` : '',
-      g.playStoreUrl ? `<a href="${g.playStoreUrl}" target="_blank" class="store-badge android">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.64.18.96.04l13.1-7.26-2.83-2.83-11.23 10.05zm-1.8-20.4C1.14 3.7 1 4.08 1 4.56v14.88c0 .48.14.86.38 1.12l.06.06L9.37 12v-.18L1.44 3.3l-.06.06zm19.1 8.88l-2.75-1.52-3.14 3.14 3.14 3.14 2.77-1.54c.79-.44.79-1.16-.02-1.22zM4.14.24L17.24 7.5l-2.83 2.83L3.18.28C2.86.14 2.52.15 2.22.32l-.04-.08z"/></svg>
-        Google Play</a>` : ''
-    ].join('');
-
-    card.innerHTML = `
-      <img class="store-game-logo" src="${g.logo || ''}" alt="${g.name}" onerror="this.style.background='var(--bg3)'">
-      <div class="store-game-info">
-        <div class="store-game-genre">${g.genre}</div>
-        <div class="store-game-name">${g.name}</div>
-        <div class="store-game-desc">${g.desc}</div>
-        <div class="store-badges">${badges}</div>
-      </div>
-    `;
-    list.appendChild(card);
+  // Tabs
+  const tabs = document.querySelectorAll('.tab');
+  const panes = document.querySelectorAll('.games-grid');
+  tabs.forEach(t => {
+    t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('is-active'));
+      t.classList.add('is-active');
+      const target = t.dataset.tab;
+      panes.forEach(p => p.classList.toggle('is-hidden', p.dataset.pane !== target));
+    });
   });
-}
 
-// ─── OYUN VERİSİ ───────────────────────────────────────────────
-// KULLANIM: src alanına Unity WebGL derlemenizin URL'ini yazın.
-// Boş bırakırsanız placeholder ekranı gösterilir.
-const games = [
-  {
-    id: 1,
-    name: "ALRIGHT, CHEF!",
-    genre: "CASUAL / COOKING",
-    desc: "Run your own restaurant, serve customers, earn stars and decorate your place to make it the best in town.",
-    icon: "🍳",
-    tags: ["CASUAL", "COOKING", "TIME MANAGEMENT"],
-    badge: "featured",
-    badgeText: "⭐ FEATURED",
-    itchUrl: "https://itch.io",
-    src: "GameBuild/index.html",
-    bg: "linear-gradient(135deg, #1a0a00 0%, #3e1a00 50%, #2e0a00 100%)"
-  },
-  {
-    id: 2,
-    name: "NEON DUNGEON",
-    genre: "ROGUELIKE / ACTION",
-    desc: "A different dungeon every run. Choose your weapons wisely — death is permanent.",
-    icon: "⚔️",
-    tags: ["ROGUELIKE", "PERMADEATH", "DUNGEON"],
-    badge: "new",
-    badgeText: "✨ NEW",
-    itchUrl: "https://itch.io",
-    src: "",
-    bg: "linear-gradient(135deg, #1a0a0a 0%, #2e0a2e 50%, #1a1a0a 100%)"
-  },
-  {
-    id: 3,
-    name: "GRAVITY SHIFT",
-    genre: "PUZZLE / PLATFORM",
-    desc: "Flip gravity to solve puzzles. Physics-based platformer mechanics.",
-    icon: "🔮",
-    tags: ["PUZZLE", "PHYSICS", "PLATFORM"],
-    badge: null,
-    itchUrl: "https://itch.io",
-    src: "",
-    bg: "linear-gradient(135deg, #0a1a0a 0%, #0a2e1a 50%, #0a0a2e 100%)"
-  },
-  {
-    id: 4,
-    name: "PIXEL WARS",
-    genre: "STRATEGY / TOWER DEFENSE",
-    desc: "Manage pixel armies, upgrade towers and hold off the waves.",
-    icon: "🏰",
-    tags: ["STRATEGY", "TOWER DEFENSE", "WAVES"],
-    badge: "wip",
-    badgeText: "🔧 WIP",
-    itchUrl: "https://itch.io",
-    src: "",
-    bg: "linear-gradient(135deg, #1a1a0a 0%, #2e2a0a 50%, #0a1a0a 100%)"
-  },
-  {
-    id: 5,
-    name: "DEEP SIGNAL",
-    genre: "HORROR / EXPLORATION",
-    desc: "An abandoned underwater research station. The silence is the worst part.",
-    icon: "🦑",
-    tags: ["HORROR", "EXPLORATION", "ATMOSPHERE"],
-    badge: null,
-    itchUrl: "https://itch.io",
-    src: "",
-    bg: "linear-gradient(135deg, #000a1a 0%, #001a2e 50%, #000a0a 100%)"
-  }
-];
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+  reveals.forEach(el => io.observe(el));
+})();
 
-// ─── OYUN KARTLARINI OLUŞTUR ─────────────────────────────────
-function renderGames() {
-  const grid = document.getElementById('gamesGrid');
-  const filtered = games.filter(g => g.src && g.src.length > 0);
-  filtered.forEach((g, i) => {
-    const card = document.createElement('div');
-    card.className = 'game-card' + (i === 0 ? ' featured' : '');
-    card.onclick = () => openModal(g);
-
-    let badgeHtml = '';
-    if (g.badge) {
-      const cls = g.badge === 'featured' ? 'badge-featured' : g.badge === 'new' ? 'badge-new' : 'badge-wip';
-      badgeHtml = `<div class="game-badge ${cls}">${g.badgeText || g.badge.toUpperCase()}</div>`;
-    }
-
-    const tagsHtml = g.tags.map(t => `<span class="game-tag">${t}</span>`).join('');
-
-    card.innerHTML = `
-      <div class="game-thumb">
-        <div class="game-thumb-bg" style="background:${g.bg}">${g.icon}</div>
-        ${badgeHtml}
-        <div class="play-overlay">
-          <div class="play-btn-icon">▶</div>
-        </div>
-      </div>
-      <div class="game-info">
-        <div class="game-genre">${g.genre}</div>
-        <div class="game-name">${g.name}</div>
-        <div class="game-desc">${g.desc}</div>
-        <div class="game-meta">${tagsHtml}</div>
-        ${i === 0 ? `<button class="game-play-btn">▶ PLAY</button>` : ''}
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-// ─── MODAL ───────────────────────────────────────────────────
-function openModal(game) {
-  document.getElementById('modalIcon').textContent = game.icon;
-  document.getElementById('modalName').textContent = game.name;
-  document.getElementById('modalGenre').textContent = game.genre;
-  document.getElementById('modalItchLink').href = game.itchUrl || '#';
-
-  const tagsEl = document.getElementById('modalTags');
-  tagsEl.innerHTML = game.tags.map(t => `<span class="game-tag">${t}</span>`).join('');
-
-  const wrapper = document.getElementById('iframeWrapper');
-  if (game.src && game.src.length > 0) {
-    wrapper.innerHTML = `<iframe src="${game.src}" allowfullscreen allow="autoplay; fullscreen"></iframe>`;
-  } else {
-    wrapper.innerHTML = `
-      <div class="iframe-placeholder">
-        <div class="big-icon">${game.icon}</div>
-        <h3>${game.name}</h3>
-        <p>
-          Upload your Unity WebGL build and<br>
-          fill in the <code>src</code> field in the <code>games</code> array.<br><br>
-          Example: <code>src: "https://yoursite.com/game/index.html"</code>
-        </p>
-      </div>
-    `;
-  }
-
+// Modal
+function openModal() {
+  document.getElementById('iframeWrapper').innerHTML =
+    '<iframe src="GameBuild/index.html" allowfullscreen allow="autoplay; fullscreen"></iframe>';
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -1233,27 +940,6 @@ function closeModalOutside(e) {
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-// ─── MOBİL MENÜ ──────────────────────────────────────────────
-function toggleMenu() {
-  document.getElementById('mobileMenu').classList.toggle('open');
-}
-
-// ─── SCROLL ANIMATE ──────────────────────────────────────────
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    entry.target.querySelectorAll('.skill-fill').forEach(bar => {
-      bar.style.width = bar.dataset.width + '%';
-    });
-    observer.unobserve(entry.target);
-  });
-}, { threshold: 0.3 });
-
-// ─── INIT ────────────────────────────────────────────────────
-renderStoreGames();
-renderGames();
-observer.observe(document.getElementById('about'));
 </script>
 
 </body>
