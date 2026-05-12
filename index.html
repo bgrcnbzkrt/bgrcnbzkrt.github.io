@@ -681,6 +681,25 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
   border: none;
 }
 
+/* ---------- Trailer hover ---------- */
+.game-card__trailer-layer {
+  position: absolute; inset: 0;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+.game-card__trailer-layer iframe {
+  width: 100%; height: 100%;
+  border: none;
+  display: block;
+}
+.game-card[data-trailer-active] .game-card__trailer-layer {
+  opacity: 1;
+  pointer-events: auto;
+}
+.game-card[data-trailer-active] .game-card__poster { opacity: 0; }
+
 /* ---------- Reveal on scroll ---------- */
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
 .reveal.is-in { opacity: 1; transform: translateY(0); }
@@ -739,11 +758,11 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
   <div class="games-grid" data-pane="releases">
 
     <article class="game-card reveal">
-      <div class="game-card__media">
+      <div class="game-card__media" data-trailer="5Z6xwzDsx2k">
         <div class="game-card__poster game-card__poster--art game-card__poster--chef">
           <img src="images/alright-chef.png" alt="Alright, Chef!">
         </div>
-        <div class="game-card__preview" data-label="COOKING / CASUAL"></div>
+        <div class="game-card__trailer-layer"></div>
         <span class="game-card__badge">Out now</span>
       </div>
       <div class="game-card__meta">
@@ -928,6 +947,27 @@ function closeModalOutside(e) {
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Trailer hover
+document.querySelectorAll('.game-card__media[data-trailer]').forEach(media => {
+  const layer = media.querySelector('.game-card__trailer-layer');
+  const card  = media.closest('.game-card');
+  let timer;
+
+  media.addEventListener('mouseenter', () => {
+    timer = setTimeout(() => {
+      const id = media.dataset.trailer;
+      layer.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${id}&modestbranding=1&rel=0" allow="autoplay; fullscreen"></iframe>`;
+      card.setAttribute('data-trailer-active', '');
+    }, 300);
+  });
+
+  media.addEventListener('mouseleave', () => {
+    clearTimeout(timer);
+    card.removeAttribute('data-trailer-active');
+    layer.innerHTML = '';
+  });
+});
 </script>
 
 </body>
