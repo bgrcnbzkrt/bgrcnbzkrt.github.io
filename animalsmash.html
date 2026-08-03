@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animal Smash — BeeWolf Studios</title>
+<meta name="description" content="A 90-second arcade smasher for iPhone and iPad. Aim the ring, let the hammer swing, clear the table.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@300;400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0A0907; --bg-2:#100E0B; --bg-3:#16130F;
+  --line:rgba(255,236,200,0.10); --line-2:rgba(255,236,200,0.18);
+  --fg:#F2EBDD; --fg-dim:#A39A88; --fg-faint:#645D52;
+  --accent:#FFB347; --accent-2:#FFD089;
+  --serif:'Cormorant Garamond',serif; --sans:'Space Grotesk',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  --pad-x:clamp(20px,5vw,80px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--accent-2)}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.06;mix-blend-mode:overlay;
+background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+.wrap{max-width:760px;margin:0 auto;padding:clamp(56px,10vh,120px) var(--pad-x) 100px}
+.back{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-faint);display:inline-block;margin-bottom:clamp(40px,8vh,72px)}
+.back:hover{color:var(--accent)}
+h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.6rem,7vw,4.2rem);line-height:1.04;letter-spacing:-.01em}
+.tagline{color:var(--fg-dim);font-size:clamp(1rem,2.2vw,1.15rem);margin-top:20px;max-width:46ch}
+.rule{height:1px;background:var(--line);margin:clamp(40px,7vh,64px) 0}
+h2{font-family:var(--mono);font-size:.72rem;font-weight:400;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:22px}
+ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+li{position:relative;padding-left:22px;color:var(--fg-dim)}
+li::before{content:"";position:absolute;left:0;top:.68em;width:7px;height:1px;background:var(--accent);opacity:.7}
+li b{color:var(--fg);font-weight:500}
+.mail{font-family:var(--mono);font-size:clamp(1rem,3vw,1.3rem);color:var(--accent);word-break:break-all}
+.faq{display:flex;flex-direction:column;gap:26px}
+.q{color:var(--fg);font-weight:500;margin-bottom:5px}
+.a{color:var(--fg-dim);font-size:.95rem}
+footer{margin-top:clamp(56px,9vh,90px);padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-faint)}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="wrap">
+
+  <a class="back" href="/">← Buğracan Bozkurt</a>
+
+  <h1>Animal&nbsp;Smash</h1>
+  <p class="tagline">A 90-second arcade smasher for iPhone and iPad. Aim the ring, let the hammer swing, clear the table.</p>
+
+  <div class="rule"></div>
+
+  <h2>The game</h2>
+  <ul>
+    <li><b>90-second runs.</b> Each one is a numbered day.</li>
+    <li><b>You only aim.</b> The hammer swings by itself — no tapping.</li>
+    <li><b>Keep the chain alive.</b> Hits landed close together build a combo up to 3×.</li>
+    <li><b>Six weapons</b>, from a toy hammer to a sledgehammer. Every one upgradable.</li>
+    <li><b>Ten animals</b>, from chicks to an elephant that takes some convincing.</li>
+    <li><b>No lives, no energy</b>, no waiting to play again.</li>
+  </ul>
+
+  <div class="rule"></div>
+
+  <h2>Support</h2>
+  <p style="color:var(--fg-dim);margin-bottom:16px">Found a bug, or want something in the game? Write to us — we read everything and usually reply within a couple of days.</p>
+  <p class="mail"><a href="mailto:bgrcnbzkrt@gmail.com">bgrcnbzkrt@gmail.com</a></p>
+
+  <div class="rule"></div>
+
+  <h2>Common questions</h2>
+  <div class="faq">
+    <div>
+      <p class="q">My progress disappeared.</p>
+      <p class="a">Saves live on the device only. Deleting the app clears them, and they do not transfer between devices.</p>
+    </div>
+    <div>
+      <p class="q">There is no ×2 button after my run.</p>
+      <p class="a">It appears only when an ad is ready to show. If none loaded, the button stays hidden and you keep your coins as normal.</p>
+    </div>
+    <div>
+      <p class="q">Why am I not seeing any ads?</p>
+      <p class="a">New players see none for the first several days. That is deliberate.</p>
+    </div>
+  </div>
+
+  <footer>
+    <span>BeeWolf Studios</span>
+    <span><a href="privacy.html">Privacy Policy</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
