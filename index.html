@@ -841,7 +841,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
     </article>
 
     <!-- Animal Smash Demo -->
-    <article class="game-card game-card--clickable reveal" onclick="openModal('AnimalSmashBuild/index.html', 'ANIMAL SMASH — WEB DEMO')">
+    <article class="game-card game-card--clickable reveal" onclick="openModal('AnimalSmashBuild/index.html', 'ANIMAL SMASH — WEB DEMO', true)">
       <div class="game-card__media">
         <div class="game-card__poster game-card__poster--art game-card__poster--demo">
           <img src="images/animal-smash.jpg" alt="Animal Smash — WebGL Demo">
@@ -989,10 +989,20 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 })();
 
 // Modal
-function openModal(src = 'GameBuild/index.html', title = 'ALRIGHT, CHEF! — WEB DEMO') {
+function openModal(src = 'GameBuild/index.html', title = 'ALRIGHT, CHEF! — WEB DEMO', isPortrait = false) {
   document.getElementById('modalTitle').innerText = title;
-  document.getElementById('iframeWrapper').innerHTML =
-    `<iframe src="${src}" allowfullscreen allow="autoplay; fullscreen"></iframe>`;
+  const modal = document.getElementById('modal');
+  const wrapper = document.getElementById('iframeWrapper');
+  
+  if (isPortrait) {
+    modal.style.maxWidth = '450px';
+    wrapper.style.paddingTop = '180%'; /* 1080/600 aspect ratio */
+  } else {
+    modal.style.maxWidth = '1000px';
+    wrapper.style.paddingTop = '62.5%'; /* 600/960 aspect ratio */
+  }
+
+  wrapper.innerHTML = `<iframe src="${src}" allowfullscreen allow="autoplay; fullscreen"></iframe>`;
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
