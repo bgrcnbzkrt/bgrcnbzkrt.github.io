@@ -972,7 +972,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
         io.unobserve(e.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+  }, { threshold: 0, rootMargin: '0px 0px -50px 0px' });
   reveals.forEach(el => io.observe(el));
 })();
 
