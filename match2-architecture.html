@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Architecture of a Match-2 Puzzle Game — Buğracan Bozkurt</title>
+<title>How to Create Code Structure for Match-2 Game — Buğracan Bozkurt</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
@@ -116,6 +116,15 @@ a { color: inherit; text-decoration: none; }
   margin: 40px 0 16px;
 }
 
+.article-content h4 {
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--accent-2);
+  margin: 24px 0 12px;
+  letter-spacing: 0.05em;
+}
+
 .article-content p {
   color: var(--fg-dim);
   margin-bottom: 20px;
@@ -170,65 +179,140 @@ a { color: inherit; text-decoration: none; }
   <a href="index.html#blog" class="btn-back">← Back to Portfolio</a>
   
   <header class="article-header">
-    <h1 class="article-title">Architecture of a Match-2 Puzzle Game</h1>
+    <h1 class="article-title">How to Create Code Structure for Match-2 Game</h1>
     <div class="article-meta">Game Development · Unity · Architecture</div>
   </header>
 
   <div class="article-content">
-    <p>Building a robust and scalable "Match-2" (blast) puzzle game requires strict adherence to the Separation of Concerns principle. In this architecture breakdown, I will explore how to decouple the Logic (Model) from the View layer using a Controller-based architecture in Unity, ensuring the game rules run independently from the visual representation.</p>
-
-    <h2>1. Design Pattern & Code Architecture</h2>
-    <p>The core logic of the game is written in pure C# and completely isolated from the <code>UnityEngine</code> namespace. The visual layer uses <code>MonoBehaviour</code> components to render the state calculated by the logic layer. The communication between the two is established via an event-driven observer pattern.</p>
+    
+    <h2>1. Design Pattern and Code Architecture</h2>
+    <p>When designing the code structure, the <strong>Separation of Concerns</strong> principle must be applied. The architecture is primarily divided into two main layers: Logic and View. Communication between these layers is established via Event structures. While different design patterns are used in specific situations, the overall architecture strictly follows the MVC/MVP paradigm.</p>
+    <p>The Logic layer is written in pure C# and is completely isolated from <code>UnityEngine</code>. The View layer, on the other hand, uses the <code>MonoBehaviour</code> class structure to create the visual layer the player sees on the screen. These two structures are connected via Controller/Presenter architectures.</p>
 
     <h3>1.1. Folder Structure</h3>
+    
+    <h4>1.1.1 Logic</h4>
+    <p>The file structure of the Logic layer is divided into five main parts: <strong>Grid</strong>, <strong>Items</strong>, <strong>Logic Interfaces</strong>, <strong>Systems</strong>, and <strong>Builders & Factories</strong>.</p>
     <ul>
-      <li><strong>Logic:</strong> Divided into <code>Grid</code>, <code>Items</code>, <code>Logic Interfaces</code>, <code>Systems</code>, and <code>Builders & Factories</code>.</li>
-      <li><strong>View:</strong> Divided into <code>Grid</code>, <code>UI</code>, <code>Feedback</code>, and <code>Infrastructure</code>.</li>
-      <li><strong>Managers & Controllers:</strong> Handling input, game states, and logic flow.</li>
-      <li><strong>ScriptableObjects:</strong> Containing configurations, level data, and item definitions.</li>
+      <li><strong>Grid:</strong>
+        <ul>
+          <li><code>GridPosition</code>: A struct written to easily locate and process positions on the grid during gameplay.</li>
+          <li><code>Cell</code>: Represents each distinct cell on the grid, holding a <code>GridPosition</code>, Item type, and a list of Neighbors.</li>
+          <li><code>Grid</code>: Contains a 2D matrix of cells built according to the row and column values for each level.</li>
+        </ul>
+      </li>
+      <li><strong>Items:</strong> Contains classes like <code>Cube</code>, <code>Duck</code>, <code>Balloon</code>, <code>ColoredBalloon</code>, <code>Box</code>, and <code>Rocket</code>. All implement the <code>IGridItem</code> interface, but they can possess different variables or methods by implementing different secondary interfaces.</li>
+      <li><strong>Logic Interfaces:</strong> Contains interfaces like <code>IBottomCollectable</code>, <code>IColored</code>, <code>IDamageable</code>, <code>IFallable</code>, <code>IFlyableToGoal</code>, <code>IGridItem</code>, and <code>IMatchable</code>. These distribute specific properties across items (e.g., Duck has <code>IBottomCollectable</code> but not <code>IColored</code>). Interfaces like <code>IFallSystem</code>, <code>IFillSystem</code>, <code>IMatchSystem</code>, etc., are also kept here for dependency injection.</li>
+      <li><strong>Systems:</strong> Contains 5 classes: <code>FallSystem</code>, <code>FillSystem</code>, <code>MatchSystem</code>, <code>RocketSystem</code>, and <code>BottomCollectSystem</code>. Each handles its respective logic on the board.</li>
+      <li><strong>Builders & Factories:</strong>
+        <ul>
+          <li><code>ItemFactory</code>: A static class responsible for creating item objects. Acts as a factory during the Fill process with methods like <code>CreateRandomItem()</code>.</li>
+          <li><code>LevelBuilder</code>: Responsible for setting up the Grid at the start of the game based on <code>LevelData</code>.</li>
+        </ul>
+      </li>
     </ul>
 
-    <h3>1.2. The Logic Layer</h3>
-    <p>The Logic layer computes the grid state. It uses fundamental structures like <code>GridPosition</code> (a struct for coordinate mathematics) and <code>Cell</code> (representing each grid slot and holding references to its neighbors and occupying item).</p>
-    <p>Items such as <code>Cube</code>, <code>Duck</code>, <code>Balloon</code>, and <code>Rocket</code> all implement a base <code>IGridItem</code> interface. To ensure maximum flexibility, behaviors are attached via interfaces like <code>IBottomCollectable</code>, <code>IDamageable</code>, or <code>IFallable</code>. Systems such as <code>FallSystem</code> and <code>MatchSystem</code> act strictly upon these interfaces rather than concrete classes.</p>
-
-    <h3>1.3. Initialization Data Flow</h3>
-    <p>During the start of the game, <code>GameManager.Awake()</code> sets up the dependency injection and initializes the required systems to build the scene. The execution order is strictly managed as seen below:</p>
-    <img src="images/image1.png" style="width: 100%; border-radius: 8px; margin: 24px 0; border: 1px solid var(--line-2);" alt="Initialization Flowchart">
-
-    <h2>2. Core Mechanics & Algorithms</h2>
-
-    <h3>2.1. Processing Player Input</h3>
-    <p>When the player taps the screen, the <code>GridController.ProcessClick()</code> runs an asynchronous pipeline to resolve the board state. The steps are:</p>
+    <h4>1.1.2 View</h4>
     <ul>
-      <li><strong>Input Validation:</strong> Using a delegate injection, the logic fetches <code>ignoredItems</code> from the view to prevent matching items that are currently animating.</li>
-      <li><strong>Action Resolution:</strong> If the tapped item is a <code>Rocket</code>, the <code>RocketSystem.ActivateRocketAsync()</code> is invoked, processing chain reactions. If it's a regular cube, <code>MatchSystem.Match()</code> is called.</li>
-      <li><strong>Fall & Fill Loop:</strong> A <code>do-while</code> loop processes <code>Fall</code> and <code>Fill</code> mechanics for the affected columns using a two-pointer algorithm. This loop continues until all gravity physics are resolved.</li>
-      <li><strong>Bottom Collection:</strong> After gravity settles, <code>BottomCollectSystem</code> checks if items like "Ducks" have reached the lowest row and collects them.</li>
+      <li><strong>Grid:</strong> 
+        <ul>
+          <li><code>GridView</code>: Listens to logic events and manages how grid visuals react.</li>
+          <li><code>ItemView</code>: Represents the visual counterpart of grid items in the scene and manages their animations.</li>
+          <li><code>RocketView</code>: Inherits from <code>ItemView</code> to specifically manage the unique visual structure and animations of the Rocket.</li>
+        </ul>
+      </li>
+      <li><strong>UI:</strong>
+        <ul>
+          <li><code>UIPresenter</code>: Manages the creation of Goal UIs and tells <code>GridView</code> where goal items should fly.</li>
+          <li><code>GoalUIItem</code>: The class for the visual goal prefab on screen, handling its reactions and animations.</li>
+          <li><code>GoalFlyTarget</code>: A struct storing the position and scale of the target.</li>
+        </ul>
+      </li>
+      <li><strong>FeedBack:</strong> Includes <code>ParticleReactor</code>, <code>ParticleEffect</code>, and <code>AudioReactor</code> to listen to events and play the correct visual effects and sounds.</li>
+      <li><strong>Infrastructure:</strong> Includes <code>ItemViewFactory</code> for instantiating visuals and <code>ItemPool</code> for pooling item prefabs to avoid costly Instantiate/Destroy loops.</li>
     </ul>
 
-    <img src="images/image2.png" style="width: 100%; border-radius: 8px; margin: 24px 0; border: 1px solid var(--line-2);" alt="Input Processing Flowchart">
-
-    <h3>2.2. The Match Finder (Breadth-First Search)</h3>
-    <p>The <code>MatchFinder</code> class utilizes a <strong>Breadth-First Search (BFS)</strong> algorithm. It uses a <code>Queue</code> to check adjacent cells for matching colors and a <code>HashSet</code> of visited cells to prevent infinite loops. The resulting matched group is then passed to the logic controller to apply damage to neighboring obstacles (like Boxes or Balloons).</p>
-
-    <h2>3. The View Layer</h2>
-    <p>The visual representation must stay perfectly synced with the logic layer, but it should not dictate the rules. The <code>GridView</code> class listens to logic events and orchestrates the animations. It maintains a <code>viewDictionary</code> mapping <code>IGridItem</code> to <code>ItemView</code>.</p>
-    <p>To avoid race conditions, <code>ItemView</code> components queue their animations and flag themselves as <code>IsAnimating</code>. The logic layer pauses input if necessary, ensuring a smooth, bug-free visual experience.</p>
-
-    <h2>4. Data Structures & Scalability</h2>
-    <p>The game is highly data-driven, leveraging Unity's <code>ScriptableObject</code> architecture:</p>
+    <h4>1.1.3 Managers & Controllers</h4>
     <ul>
-      <li><strong>ItemDefinition:</strong> An abstract class that holds the logic type, sprites, and prefabs for a specific item. Adding a new obstacle is as easy as creating a new definition asset and assigning its interfaces.</li>
-      <li><strong>GameSettingsData:</strong> A centralized configuration file for animation timings, gravity speed, and delay parameters, allowing designers to tweak the game feel without recompiling code.</li>
-      <li><strong>LevelData:</strong> A 2D matrix structure configured via custom Inspector code to design levels visually within the Unity Editor.</li>
+      <li><code>GameManager</code>: Acts as the Composition Root and manages player clicks via events.</li>
+      <li><code>GridController</code>: Manages the Match/Fall/Fill processes asynchronously on the logic side, directing the flow of the game.</li>
+      <li><code>GoalManager</code>: Holds and updates logic variables like goals and remaining moves.</li>
+      <li><code>InputManager</code>: Converts screen clicks to world positions and sends them to the system.</li>
+      <li><code>EventManager</code>: Allows data flow between Logic and View layers without direct references.</li>
     </ul>
 
-    <h2>5. Scene Hierarchy & Setup</h2>
-    <p>In the Unity hierarchy, everything is modular. <code>GameManager</code>, <code>InputManager</code>, <code>ItemViewFactory</code>, <code>ParticleReactor</code>, <code>AudioReactor</code>, <code>UIPresenter</code>, and <code>GridView</code> act as single-responsibility controllers. The components are assigned via the Inspector to maintain a clean MVC connection without hardcoding dependencies.</p>
-    <img src="images/image3.png" style="width: 100%; border-radius: 8px; margin: 24px 0; border: 1px solid var(--line-2);" alt="Unity Scene Hierarchy">
+    <h4>1.1.4 ScriptableObjects</h4>
+    <ul>
+      <li><strong>Data & Database:</strong>
+        <ul>
+          <li><code>LevelData</code>: Holds goals, moves, rows, columns, and a custom inspector gridLayout matrix.</li>
+          <li><code>GameSettingsData</code>: Configurable parameters for animations, cell width, grid offset, etc.</li>
+          <li><code>AudioDatabase</code>: Holds the audio clip data.</li>
+          <li><code>ItemDatabase</code>: A list of <code>ItemDefinition</code> scriptable objects to centralized item creation logic.</li>
+        </ul>
+      </li>
+      <li><strong>Item Definitions:</strong> <code>ItemDefinition</code> holds logic type, color, sprite, and prefab data for items.</li>
+    </ul>
 
-    <p>By enforcing this strict MVC architecture and relying heavily on interface segregation and ScriptableObjects, the puzzle game framework becomes highly scalable, allowing rapid prototyping of new mechanics and levels.</p>
+    <h4>1.1.5 Algorithm & Enums & Utils</h4>
+    <ul>
+      <li><code>MatchFinder</code>: Uses Breadth-First Search (BFS) to find match groups.</li>
+      <li><code>Utils</code>: Static class for math and Unity conversion helpers.</li>
+      <li><code>Enums</code>: Standardized types like <code>ItemColor</code>, <code>RocketOrientation</code>, <code>DamageType</code>.</li>
+    </ul>
+
+    <h3>1.2 Data Flow</h3>
+    <p>At the start of the game, <code>GameManager.Awake()</code> sets up the dependency injection and starts necessary functions to build the scene. The dependency injection flow occurs in the following order:</p>
+    <img src="images/image1.png" style="width: 100%; border-radius: 8px; margin: 24px 0; border: 1px solid var(--line-2);" alt="Initialization Data Flow Diagram">
+
+    <p>Simultaneously, <code>GameManager</code> listens to events from <code>InputManager</code> via the <code>HandleClick()</code> function, which triggers the logic within <code>GridController</code>. The system flow happens as shown below:</p>
+    <img src="images/image2.png" style="width: 100%; border-radius: 8px; margin: 24px 0; border: 1px solid var(--line-2);" alt="Input Processing Flow Diagram">
+    
+    <p>The <code>ProcessClick()</code> function in <code>GridController</code> processes the click, firing necessary events. Observers attached to these events then execute the required actions for the visual layer.</p>
+
+    <h2>1.3 Core Mechanics & Algorithms</h2>
+
+    <h3>1.3.1 GridController.ProcessClick()</h3>
+    <p>This asynchronous method processes player input step-by-step:</p>
+    <ol>
+      <li><strong>Ignored Items:</strong> Uses delegate injection to fetch <code>ignoredItems</code> from the view, preventing matching calculations on items that are currently moving or animating.</li>
+      <li><strong>Validation:</strong> Calls <code>CanProcessClick()</code> to ensure the clicked object is valid and not moving.</li>
+      <li><strong>Affected Columns:</strong> Creates an <code>affectedColumn</code> list to target only specific columns for fall/fill instead of scanning the entire board.</li>
+      <li><strong>Execution:</strong> Calls <code>ActivateItemAsync()</code>. If it's a Rocket, <code>RocketSystem.ActivateRocketAsync()</code> is executed, managing chain reactions via <code>HandleChainReaction()</code>. If it's a regular match, <code>MatchSystem.Match()</code> is called.</li>
+      <li><strong>Fall/Fill Loop:</strong> A <code>do-while</code> loop calls <code>RunFallFillLoopAsync()</code> as long as <code>affectedColumn</code> has elements. After falling/filling, <code>BottomCollectSystem.CollectAsync()</code> checks if items like Ducks have reached the bottom. If they have, they are collected and the loop continues to refill the grid.</li>
+    </ol>
+
+    <h3>1.3.2 MatchSystem & MatchFinder</h3>
+    <ul>
+      <li><strong>MatchSystem:</strong> Calls <code>MatchFinder.FindMatch()</code> to get matching cubes. If valid, it triggers <code>ClearMatchCells()</code> to destroy or merge items, and <code>DamageNeighbors()</code> to apply damage to adjacent obstacles (like Boxes) implementing <code>IDamageable</code>.</li>
+      <li><strong>MatchFinder:</strong> Uses a <strong>Breadth-First Search (BFS)</strong> algorithm with <code>HashSet</code> (for visited nodes) and <code>Queue</code> collections. It queues the clicked cell, searches neighbors for matching colors, and loops until the entire connected group is found.</li>
+    </ul>
+
+    <h3>1.3.3 Fall & Fill Systems</h3>
+    <ul>
+      <li><strong>Fall System:</strong> Iterates through affected columns starting from the bottom row, using a two-pointer approach to pull falling items down.</li>
+      <li><strong>Fill System:</strong> Iterates from the top row downwards. When it finds an empty cell, it generates a random item and triggers the fill event.</li>
+    </ul>
+
+    <h3>1.3.4 RocketSystem</h3>
+    <p>The <code>ActivateRocketAsync()</code> method processes the rocket's movement. It uses a distance parameter and an <code>activeDirections</code> list to advance cell by cell in two directions. Thanks to <code>Task.Delay()</code>, it waits based on settings defined in <code>GameSettings</code>, applying <code>ApplyDamage()</code> to each cell. This allows rockets to trigger chain reactions on other items.</p>
+
+    <h3>1.3.5 BottomCollectSystem</h3>
+    <p>Asynchronously collects items like Ducks that fall to the bottom row. It checks the bottom-most item of affected columns, and if it has the <code>IBottomCollectable</code> interface, it triggers collection, pausing briefly via <code>Task.Delay()</code> to sync with animations.</p>
+
+    <h3>1.3.6 Goal & Spawn-Quota System</h3>
+    <p>Managed by <code>GoalManager</code>. When generating the board, if the required target amount of an <code>IFallable</code> object is not met on the grid, the remaining amount is tracked as a quota. The <code>CreateRandomItem()</code> factory method consumes this quota during Fill operations to ensure the player has a chance to complete the goals.</p>
+
+    <h2>1.4 View Layer</h2>
+    <p>The View layer operates on an event-driven queue system via <code>GridView</code> and <code>ItemView</code>.</p>
+    <ul>
+      <li><strong>GridView:</strong> Holds a <code>viewDictionary</code> mapping <code>IGridItem</code> logic objects to <code>ItemView</code> visual objects. It also maintains a <code>HashSet</code> of <code>animatingItems</code>. It provides the <code>GetAnimatingItems()</code> delegate to the <code>GridController</code> to lock player input when necessary.</li>
+      <li><strong>ItemView / RocketView:</strong> Manages visual animations via a queue to ensure they play sequentially. It broadcasts state changes via <code>OnAnimationStateChanged</code>.</li>
+    </ul>
+
+    <h2>2. Data Structures (Scalability)</h2>
+    <p>The game's data structure is built on top of <code>ScriptableObject</code>s, allowing rapid expansion. To add a new item, a developer creates a new definition script inheriting from <code>ItemDefinition</code>, setting its Logic type, Sprite, and Prefab. This asset is added to the <code>ItemDatabase</code>.</p>
+    <p><code>GameSettingsData</code> allows tweaking animation timing, delays, and fall speeds without touching code. Furthermore, <code>LevelData</code> integrates with a custom Unity Editor inspector, enabling level designers to visually paint the 2D grid matrix directly within Unity.</p>
 
   </div>
 </main>
