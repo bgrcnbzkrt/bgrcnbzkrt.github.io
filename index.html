@@ -9,17 +9,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:        #0A0907;
-  --bg-2:      #100E0B;
-  --bg-3:      #16130F;
-  --line:      rgba(255,236,200,0.10);
-  --line-2:    rgba(255,236,200,0.18);
-  --fg:        #F2EBDD;
-  --fg-dim:    #A39A88;
-  --fg-faint:  #645D52;
-  --accent:    #FFB347;
-  --accent-2:  #FFD089;
-  --accent-glow: oklch(0.82 0.17 65 / 0.35);
+  --bg:        #060B13;
+  --bg-2:      #0A121F;
+  --bg-3:      #111C2E;
+  --line:      rgba(241,245,249,0.10);
+  --line-2:    rgba(241,245,249,0.18);
+  --fg:        #F8FAFC;
+  --fg-dim:    #94A3B8;
+  --fg-faint:  #475569;
+  --accent:    #38BDF8;
+  --accent-2:  #7DD3FC;
+  --accent-glow: rgba(56, 189, 248, 0.35);
 
   --serif:  'Cormorant Garamond', 'Times New Roman', serif;
   --sans:   'Space Grotesk', system-ui, sans-serif;
@@ -63,14 +63,14 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
   z-index: 50;
   display: flex; align-items: center; justify-content: space-between;
   padding: 18px var(--pad-x);
-  background: linear-gradient(to bottom, rgba(10,9,7,0.9), rgba(10,9,7,0));
+  background: linear-gradient(to bottom, rgba(6,11,19,0.9), rgba(6,11,19,0));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: padding .3s ease, background .3s ease;
 }
 .nav.is-scrolled {
   padding: 12px var(--pad-x);
-  background: rgba(10,9,7,0.85);
+  background: rgba(6,11,19,0.85);
   border-bottom: var(--rule);
 }
 .nav__brand {
@@ -129,7 +129,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
   padding: 0 var(--pad-x);
   border-bottom: var(--rule);
   background:
-    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255,179,71,0.06), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(56,189,248,0.06), transparent 60%),
     var(--bg);
 }
 .hero__rule {
@@ -238,7 +238,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 .btn--ghost { border: 1px solid var(--line-2); color: var(--fg); }
 .btn--ghost:hover {
   border-color: var(--fg);
-  background: rgba(255,236,200,0.04);
+  background: rgba(241,245,249,0.04);
 }
 
 /* ---------- Sections ---------- */
@@ -336,7 +336,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 .game-card__poster {
   background-image:
     repeating-linear-gradient(45deg,
-      rgba(255,236,200,0.025) 0, rgba(255,236,200,0.025) 1px,
+      rgba(241,245,249,0.025) 0, rgba(241,245,249,0.025) 1px,
       transparent 1px, transparent 12px);
   background-color: var(--bg-3);
 }
@@ -360,24 +360,24 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 .game-card__poster--art::after {
   content: '';
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 50% 55%, rgba(255,179,71,0.10), transparent 70%);
+  background: radial-gradient(ellipse 60% 50% at 50% 55%, rgba(56,189,248,0.10), transparent 70%);
   pointer-events: none;
 }
 
 /* Game-specific poster backgrounds */
-.game-card__poster--chef   { background: linear-gradient(135deg, #1a0a00, #3e1a00 50%, #1a0a00); }
-.game-card__poster--gravitas { background: linear-gradient(135deg, #060a18, #0e1a3a 50%, #060a18); }
-.game-card__poster--demo   { background: linear-gradient(135deg, #0a0a00, #1e1a00 50%, #0a0600); }
+.game-card__poster--chef   { background: linear-gradient(135deg, #0B172A, #1E293B 50%, #0B172A); }
+.game-card__poster--gravitas { background: linear-gradient(135deg, #0F172A, #312E81 50%, #0F172A); }
+.game-card__poster--demo   { background: linear-gradient(135deg, #0F172A, #1E3A8A 50%, #0F172A); }
 
 /* Preview hover layer */
 .game-card__preview {
   opacity: 0;
   background-image:
     repeating-linear-gradient(0deg,
-      rgba(255,179,71,0.06) 0, rgba(255,179,71,0.06) 1px,
+      rgba(56,189,248,0.06) 0, rgba(56,189,248,0.06) 1px,
       transparent 1px, transparent 4px),
-    radial-gradient(ellipse at 30% 40%, rgba(255,179,71,0.15), transparent 60%),
-    radial-gradient(ellipse at 70% 70%, rgba(255,179,71,0.10), transparent 50%);
+    radial-gradient(ellipse at 30% 40%, rgba(56,189,248,0.15), transparent 60%),
+    radial-gradient(ellipse at 70% 70%, rgba(56,189,248,0.10), transparent 50%);
   background-color: #1a1612;
   background-size: 100% 4px, 100% 100%, 100% 100%;
   animation: scan 4s linear infinite paused;
@@ -483,7 +483,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 }
 .store-badge:hover {
   border-color: var(--accent);
-  background: rgba(255,179,71,0.08);
+  background: rgba(56,189,248,0.08);
   transform: translateY(-1px);
 }
 .store-badge svg { flex-shrink: 0; }
@@ -730,9 +730,10 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
       <span class="line">Buğracan</span>
       <span class="line"><em>Bozkurt</em></span>
     </h1>
-    <p class="hero__sub">Independent Unity developer. Mobile and web games.</p>
+    <p class="hero__sub">Independent Unity developer specialized in mobile and web games. Focused on creating optimized, engaging gameplay experiences.</p>
     <div class="hero__cta-row">
       <a href="#games" class="btn btn--primary">View games <span>↓</span></a>
+      <a href="Bugracan_Bozkurt_CV.pdf" class="btn btn--ghost" target="_blank" title="Please upload your PDF CV as Bugracan_Bozkurt_CV.pdf">Download CV <span>📄</span></a>
       <a href="#about" class="btn btn--ghost">About me</a>
     </div>
   </div>
@@ -768,7 +769,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
       <div class="game-card__meta">
         <h3>Alright, Chef!</h3>
         <p class="game-card__tags">Mobile · Unity · Casual</p>
-        <p class="game-card__desc">Run your own restaurant, serve customers, earn stars and decorate your place to make it the best in town.</p>
+        <p class="game-card__desc">Developed core gameplay loop and simulation mechanics. Implemented scalable UI/UX systems and optimized rendering performance for mobile devices. Shipped end-to-end on the App Store.</p>
         <div class="store-badges">
           <a href="https://apps.apple.com/tr/app/alright-chef/id6756134625?l=tr" target="_blank" class="store-badge">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
@@ -789,7 +790,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
       <div class="game-card__meta">
         <h3>Gravitas Match</h3>
         <p class="game-card__tags">Mobile · Unity · Puzzle</p>
-        <p class="game-card__desc">Explore planets, discover unique combinations, complete levels and play fun mini-games across the galaxy.</p>
+        <p class="game-card__desc">Designed and programmed core match mechanics and level progression systems. Integrated analytics and monetization SDKs, achieving stable 60 FPS across low-end mobile devices.</p>
         <div class="store-badges">
           <a href="https://apps.apple.com/tr/app/gravitas-match/id6756153570?l=tr" target="_blank" class="store-badge">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
@@ -849,15 +850,32 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 
   <div class="stack reveal">
     <span class="stack__label">— Stack</span>
-    <ul class="stack__list">
-      <li>Unity</li>
-      <li>C#</li>
-      <li>Shader Graph</li>
-      <li>WebGL</li>
-      <li>Blender</li>
-      <li>Game Design</li>
-      <li>3D &amp; 2D</li>
-    </ul>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 32px; width: 100%;">
+      <div>
+        <h4 style="font-family: var(--mono); font-size: 10px; color: var(--accent); margin-bottom: 16px; letter-spacing: 0.1em; text-transform: uppercase;">Engine & Lang</h4>
+        <ul class="stack__list">
+          <li>Unity</li>
+          <li>C#</li>
+          <li>WebGL</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family: var(--mono); font-size: 10px; color: var(--accent); margin-bottom: 16px; letter-spacing: 0.1em; text-transform: uppercase;">Tools</h4>
+        <ul class="stack__list">
+          <li>Shader Graph</li>
+          <li>Blender</li>
+          <li>Git</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family: var(--mono); font-size: 10px; color: var(--accent); margin-bottom: 16px; letter-spacing: 0.1em; text-transform: uppercase;">Skills</h4>
+        <ul class="stack__list">
+          <li>Game Design</li>
+          <li>Optimization</li>
+          <li>3D &amp; 2D Pipeline</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
