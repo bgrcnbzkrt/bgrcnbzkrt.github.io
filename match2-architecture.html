@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture of a Match-2 Puzzle Game — Buğracan Bozkurt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #060B13;
+  --bg-2:      #0A121F;
+  --bg-3:      #111C2E;
+  --line:      rgba(241,245,249,0.10);
+  --line-2:    rgba(241,245,249,0.18);
+  --fg:        #F8FAFC;
+  --fg-dim:    #94A3B8;
+  --fg-faint:  #475569;
+  --accent:    #38BDF8;
+  --accent-2:  #7DD3FC;
+  --accent-glow: rgba(56, 189, 248, 0.35);
+
+  --serif:  'Cormorant Garamond', 'Times New Roman', serif;
+  --sans:   'Space Grotesk', system-ui, sans-serif;
+  --mono:   'JetBrains Mono', ui-monospace, monospace;
+
+  --pad-x:  clamp(20px, 5vw, 80px);
+  --rule:   1px solid var(--line);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 72px; padding: 0 var(--pad-x);
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid transparent;
+  z-index: 100;
+  transition: all .3s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(6,11,19,0.85);
+  border-bottom: var(--rule);
+}
+
+.nav__brand {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+  color: var(--fg); text-transform: uppercase;
+}
+
+.nav__dot {
+  width: 6px; height: 6px; background: var(--accent);
+  border-radius: 50%; box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.article-container {
+  max-width: 800px;
+  margin: 120px auto 100px;
+  padding: 0 var(--pad-x);
+}
+
+.article-header {
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.article-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.1;
+  margin-bottom: 20px;
+  color: var(--fg);
+}
+
+.article-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.article-content h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 32px;
+  color: var(--fg);
+  margin: 60px 0 20px;
+  border-bottom: var(--rule);
+  padding-bottom: 10px;
+}
+
+.article-content h3 {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--fg);
+  margin: 40px 0 16px;
+}
+
+.article-content p {
+  color: var(--fg-dim);
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.article-content ul {
+  color: var(--fg-dim);
+  margin-bottom: 24px;
+  padding-left: 20px;
+}
+
+.article-content li {
+  margin-bottom: 10px;
+}
+
+.article-content strong {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.article-content code {
+  font-family: var(--mono);
+  background: var(--bg-3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: var(--accent-2);
+}
+
+.btn-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
+  color: var(--fg-dim); text-transform: uppercase;
+  margin-bottom: 40px; transition: color .2s ease;
+}
+
+.btn-back:hover { color: var(--accent); }
+
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html#blog" class="nav__brand">
+    <span class="nav__dot"></span>
+    <span class="nav__name">BUĞRACAN BOZKURT</span>
+  </a>
+</header>
+
+<main class="article-container">
+  <a href="index.html#blog" class="btn-back">← Back to Portfolio</a>
+  
+  <header class="article-header">
+    <h1 class="article-title">Architecture of a Match-2 Puzzle Game</h1>
+    <div class="article-meta">Game Development · Unity · Architecture</div>
+  </header>
+
+  <div class="article-content">
+    <p>Building a robust and scalable "Match-2" (blast) puzzle game requires strict adherence to the Separation of Concerns principle. In this architecture breakdown, I will explore how to decouple the Logic (Model) from the View layer using a Controller-based architecture in Unity, ensuring the game rules run independently from the visual representation.</p>
+
+    <h2>1. Design Pattern & Code Architecture</h2>
+    <p>The core logic of the game is written in pure C# and completely isolated from the <code>UnityEngine</code> namespace. The visual layer uses <code>MonoBehaviour</code> components to render the state calculated by the logic layer. The communication between the two is established via an event-driven observer pattern.</p>
+
+    <h3>1.1. Folder Structure</h3>
+    <ul>
+      <li><strong>Logic:</strong> Divided into <code>Grid</code>, <code>Items</code>, <code>Logic Interfaces</code>, <code>Systems</code>, and <code>Builders & Factories</code>.</li>
+      <li><strong>View:</strong> Divided into <code>Grid</code>, <code>UI</code>, <code>Feedback</code>, and <code>Infrastructure</code>.</li>
+      <li><strong>Managers & Controllers:</strong> Handling input, game states, and logic flow.</li>
+      <li><strong>ScriptableObjects:</strong> Containing configurations, level data, and item definitions.</li>
+    </ul>
+
+    <h3>1.2. The Logic Layer</h3>
+    <p>The Logic layer computes the grid state. It uses fundamental structures like <code>GridPosition</code> (a struct for coordinate mathematics) and <code>Cell</code> (representing each grid slot and holding references to its neighbors and occupying item).</p>
+    <p>Items such as <code>Cube</code>, <code>Duck</code>, <code>Balloon</code>, and <code>Rocket</code> all implement a base <code>IGridItem</code> interface. To ensure maximum flexibility, behaviors are attached via interfaces like <code>IBottomCollectable</code>, <code>IDamageable</code>, or <code>IFallable</code>. Systems such as <code>FallSystem</code> and <code>MatchSystem</code> act strictly upon these interfaces rather than concrete classes.</p>
+
+    <h2>2. Core Mechanics & Algorithms</h2>
+
+    <h3>2.1. Processing Player Input</h3>
+    <p>When the player taps the screen, the <code>GridController.ProcessClick()</code> runs an asynchronous pipeline to resolve the board state. The steps are:</p>
+    <ul>
+      <li><strong>Input Validation:</strong> Using a delegate injection, the logic fetches <code>ignoredItems</code> from the view to prevent matching items that are currently animating.</li>
+      <li><strong>Action Resolution:</strong> If the tapped item is a <code>Rocket</code>, the <code>RocketSystem.ActivateRocketAsync()</code> is invoked, processing chain reactions. If it's a regular cube, <code>MatchSystem.Match()</code> is called.</li>
+      <li><strong>Fall & Fill Loop:</strong> A <code>do-while</code> loop processes <code>Fall</code> and <code>Fill</code> mechanics for the affected columns using a two-pointer algorithm. This loop continues until all gravity physics are resolved.</li>
+      <li><strong>Bottom Collection:</strong> After gravity settles, <code>BottomCollectSystem</code> checks if items like "Ducks" have reached the lowest row and collects them.</li>
+    </ul>
+
+    <h3>2.2. The Match Finder (Breadth-First Search)</h3>
+    <p>The <code>MatchFinder</code> class utilizes a <strong>Breadth-First Search (BFS)</strong> algorithm. It uses a <code>Queue</code> to check adjacent cells for matching colors and a <code>HashSet</code> of visited cells to prevent infinite loops. The resulting matched group is then passed to the logic controller to apply damage to neighboring obstacles (like Boxes or Balloons).</p>
+
+    <h2>3. The View Layer</h2>
+    <p>The visual representation must stay perfectly synced with the logic layer, but it should not dictate the rules. The <code>GridView</code> class listens to logic events and orchestrates the animations. It maintains a <code>viewDictionary</code> mapping <code>IGridItem</code> to <code>ItemView</code>.</p>
+    <p>To avoid race conditions, <code>ItemView</code> components queue their animations and flag themselves as <code>IsAnimating</code>. The logic layer pauses input if necessary, ensuring a smooth, bug-free visual experience.</p>
+
+    <h2>4. Data Structures & Scalability</h2>
+    <p>The game is highly data-driven, leveraging Unity's <code>ScriptableObject</code> architecture:</p>
+    <ul>
+      <li><strong>ItemDefinition:</strong> An abstract class that holds the logic type, sprites, and prefabs for a specific item. Adding a new obstacle is as easy as creating a new definition asset and assigning its interfaces.</li>
+      <li><strong>GameSettingsData:</strong> A centralized configuration file for animation timings, gravity speed, and delay parameters, allowing designers to tweak the game feel without recompiling code.</li>
+      <li><strong>LevelData:</strong> A 2D matrix structure configured via custom Inspector code to design levels visually within the Unity Editor.</li>
+    </ul>
+
+    <p>By enforcing this strict MVC architecture and relying heavily on interface segregation and ScriptableObjects, the puzzle game framework becomes highly scalable, allowing rapid prototyping of new mechanics and levels.</p>
+
+  </div>
+</main>
+
+<footer style="text-align: center; padding: 40px; color: var(--fg-faint); font-size: 12px; font-family: var(--mono); letter-spacing: 0.1em; border-top: var(--rule);">
+  © 2025 BUĞRACAN BOZKURT
+</footer>
+
+</body>
+</html>
