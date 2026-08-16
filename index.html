@@ -125,7 +125,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 .hero {
   position: relative;
   display: flex; flex-direction: column;
-  padding: 20px var(--pad-x) 0;
+  padding: 120px var(--pad-x) 0; /* offset for fixed nav */
   border-bottom: var(--rule);
   background:
     radial-gradient(ellipse 80% 60% at 50% 50%, rgba(56,189,248,0.06), transparent 60%),
@@ -242,7 +242,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 
 /* ---------- Sections ---------- */
 .section {
-  padding: clamp(80px, 12vw, 160px) var(--pad-x);
+  padding: clamp(40px, 8vw, 100px) var(--pad-x);
   border-bottom: var(--rule);
   position: relative;
 }
