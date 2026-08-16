@@ -123,10 +123,9 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 
 /* ---------- Hero ---------- */
 .hero {
-  min-height: 100vh;
   position: relative;
   display: flex; flex-direction: column;
-  padding: 0 var(--pad-x);
+  padding: 40px var(--pad-x) 0;
   border-bottom: var(--rule);
   background:
     radial-gradient(ellipse 80% 60% at 50% 50%, rgba(56,189,248,0.06), transparent 60%),
@@ -137,10 +136,10 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
   font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.22em;
   color: var(--fg-faint);
 }
-.hero__rule--top { padding: 90px 0 0; }
+.hero__rule--top { padding: 40px 0 0; }
 .hero__rule--bot {
   margin-top: auto;
-  padding: 0 0 28px;
+  padding: 40px 0 28px;
   align-items: center;
 }
 .hero__inner {
@@ -148,7 +147,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   text-align: center;
-  padding: 60px 0 40px;
+  padding: 20px 0 0px;
 }
 .hero__eyebrow {
   display: flex; align-items: center; gap: 12px;
@@ -176,7 +175,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 .hero__title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(48px, 9vw, 132px);
+  font-size: clamp(36px, 7vw, 96px);
   line-height: 0.95;
   letter-spacing: -0.02em;
   margin-bottom: 32px;
