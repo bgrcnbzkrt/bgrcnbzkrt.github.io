@@ -1,325 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Create Code Structure for Match-2 Game — Buğracan Bozkurt</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg:        #060B13;
-  --bg-2:      #0A121F;
-  --bg-3:      #111C2E;
-  --line:      rgba(241,245,249,0.10);
-  --line-2:    rgba(241,245,249,0.18);
-  --fg:        #F8FAFC;
-  --fg-dim:    #94A3B8;
-  --fg-faint:  #475569;
-  --accent:    #38BDF8;
-  --accent-2:  #7DD3FC;
-  --accent-glow: rgba(56, 189, 248, 0.35);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Create Code Structure for Match-2 Game — Buğracan Bozkurt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=JetBrains+Mono:wght@300;400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #060B13; --bg-2: #0A121F; --bg-3: #111C2E;
+            --line: rgba(241,245,249,0.10); --line-2: rgba(241,245,249,0.18);
+            --fg: #F8FAFC; --fg-dim: #94A3B8; --fg-faint: #475569;
+            --accent: #38BDF8; --accent-2: #7DD3FC; --accent-glow: rgba(56,189,248,0.35);
+            --serif: 'Cormorant Garamond','Times New Roman',serif;
+            --sans: 'Space Grotesk',system-ui,sans-serif;
+            --mono: 'JetBrains Mono',ui-monospace,monospace;
+            --pad-x: clamp(20px,5vw,80px); --rule: 1px solid var(--line);
+        }
 
-  --serif:  'Cormorant Garamond', 'Times New Roman', serif;
-  --sans:   'Space Grotesk', system-ui, sans-serif;
-  --mono:   'JetBrains Mono', ui-monospace, monospace;
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: var(--sans);
+            font-weight: 300;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-  --pad-x:  clamp(20px, 5vw, 80px);
-  --rule:   1px solid var(--line);
-}
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background-color: rgba(6, 11, 19, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: var(--rule);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--pad-x);
+            z-index: 100;
+        }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+        .nav__brand {
+            color: var(--fg);
+            text-decoration: none;
+            font-family: var(--sans);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.05em;
+            font-size: 14px;
+        }
 
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--sans);
-  font-weight: 300;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
+        .nav__brand .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
 
-a { color: inherit; text-decoration: none; }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 120px var(--pad-x) 80px;
+        }
 
-.nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  height: 72px; padding: 0 var(--pad-x);
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid transparent;
-  z-index: 100;
-  transition: all .3s ease;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background: rgba(6,11,19,0.85);
-  border-bottom: var(--rule);
-}
+        .back-link {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 24px;
+            transition: color 0.2s;
+        }
 
-.nav__brand {
-  display: flex; align-items: center; gap: 12px;
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
-  color: var(--fg); text-transform: uppercase;
-}
+        .back-link:hover {
+            color: var(--accent-2);
+        }
 
-.nav__dot {
-  width: 6px; height: 6px; background: var(--accent);
-  border-radius: 50%; box-shadow: 0 0 8px var(--accent-glow);
-}
+        .article-header {
+            margin-bottom: 48px;
+        }
 
-.article-container {
-  max-width: 800px;
-  margin: 120px auto 100px;
-  padding: 0 var(--pad-x);
-}
+        .article-title {
+            font-family: var(--serif);
+            font-size: 40px;
+            font-weight: 500;
+            margin: 0 0 16px 0;
+            line-height: 1.2;
+        }
 
-.article-header {
-  margin-bottom: 60px;
-  text-align: center;
-}
+        .article-meta {
+            color: var(--fg-faint);
+            font-family: var(--mono);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-.article-title {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-style: italic;
-  font-size: clamp(36px, 5vw, 64px);
-  line-height: 1.1;
-  margin-bottom: 20px;
-  color: var(--fg);
-}
+        .article-content h1 {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 28px;
+            border-bottom: var(--rule);
+            padding-bottom: 12px;
+            margin-top: 48px;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
 
-.article-meta {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  color: var(--accent);
-  text-transform: uppercase;
-}
+        .article-content h2 {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 24px;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
 
-.article-content h2 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-style: italic;
-  font-size: 32px;
-  color: var(--fg);
-  margin: 60px 0 20px;
-  border-bottom: var(--rule);
-  padding-bottom: 10px;
-}
+        .article-content h3 {
+            font-family: var(--sans);
+            font-weight: 500;
+            font-size: 20px;
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
 
-.article-content h3 {
-  font-family: var(--sans);
-  font-weight: 500;
-  font-size: 20px;
-  color: var(--fg);
-  margin: 40px 0 16px;
-}
+        .article-content h4 {
+            font-family: var(--mono);
+            font-size: 14px;
+            color: var(--accent-2);
+            margin-top: 24px;
+            margin-bottom: 12px;
+            font-weight: 400;
+        }
 
-.article-content h4 {
-  font-family: var(--mono);
-  font-weight: 400;
-  font-size: 14px;
-  color: var(--accent-2);
-  margin: 24px 0 12px;
-  letter-spacing: 0.05em;
-}
+        .article-content p {
+            color: var(--fg-dim);
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
 
-.article-content p {
-  color: var(--fg-dim);
-  margin-bottom: 20px;
-  font-size: 16px;
-}
+        .article-content ul, .article-content ol {
+            color: var(--fg-dim);
+            padding-left: 20px;
+            margin-bottom: 24px;
+            font-size: 15px;
+            line-height: 1.7;
+        }
 
-.article-content ul {
-  color: var(--fg-dim);
-  margin-bottom: 24px;
-  padding-left: 20px;
-}
+        .article-content li {
+            margin-bottom: 8px;
+        }
 
-.article-content li {
-  margin-bottom: 10px;
-}
+        .article-content strong {
+            color: var(--fg);
+            font-weight: 500;
+        }
 
-.article-content strong {
-  color: var(--fg);
-  font-weight: 500;
-}
+        .article-content code {
+            font-family: var(--mono);
+            background-color: var(--bg-3);
+            color: var(--accent-2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
 
-.article-content code {
-  font-family: var(--mono);
-  background: var(--bg-3);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  color: var(--accent-2);
-}
+        .article-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 24px 0;
+            border: 1px solid var(--line-2);
+            height: auto;
+            display: block;
+        }
 
-.btn-back {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
-  color: var(--fg-dim); text-transform: uppercase;
-  margin-bottom: 40px; transition: color .2s ease;
-}
+        .article-content a {
+            color: var(--accent);
+            text-decoration: none;
+        }
 
-.btn-back:hover { color: var(--accent); }
+        .article-content a:hover {
+            text-decoration: underline;
+        }
 
-</style>
+        .footer {
+            text-align: center;
+            font-family: var(--mono);
+            color: var(--fg-faint);
+            font-size: 13px;
+            padding: 40px var(--pad-x);
+            border-top: var(--rule);
+            margin-top: 64px;
+        }
+    </style>
 </head>
 <body>
 
-<header class="nav">
-  <a href="index.html#blog" class="nav__brand">
-    <span class="nav__dot"></span>
-    <span class="nav__name">BUĞRACAN BOZKURT</span>
-  </a>
-</header>
+    <nav class="top-nav">
+        <a href="index.html#blog" class="nav__brand">
+            <div class="dot"></div>
+            BUĞRACAN BOZKURT
+        </a>
+    </nav>
 
-<main class="article-container">
-  <a href="index.html#blog" class="btn-back">← Back to Portfolio</a>
-  
-  <header class="article-header">
-    <h1 class="article-title">How to Create Code Structure for Match-2 Game</h1>
-    <div class="article-meta">Game Development · Unity · Architecture</div>
-  </header>
+    <div class="container">
+        <a href="index.html#blog" class="back-link">← Back to Portfolio</a>
+        
+        <header class="article-header">
+            <h1 class="article-title">How to Create Code Structure for Match-2 Game</h1>
+            <div class="article-meta">Game Development · Unity · Architecture</div>
+        </header>
 
-  <div class="article-content">
-    
-    <h2>1. Design Pattern and Code Architecture</h2>
-    <p>When designing the code structure, the <strong>Separation of Concerns</strong> principle must be applied. The architecture is primarily divided into two main layers: Logic and View. Communication between these layers is established via Event structures. While different design patterns are used in specific situations, the overall architecture strictly follows the MVC/MVP paradigm.</p>
-    <p>The Logic layer is written in pure C# and is completely isolated from <code>UnityEngine</code>. The View layer, on the other hand, uses the <code>MonoBehaviour</code> class structure to create the visual layer the player sees on the screen. These two structures are connected via Controller/Presenter architectures.</p>
+        <div class="article-content">
+            <p><strong>How to Create Code Structure for Match-2 Game</strong></p><p>İçindekiler</p><p><a href="#_2cuy8o2au9vw"><strong>1.Design Pattern and Code Architecture	2</strong></a></p><p><a href="#_auxv3i5qcasl">1.1. Folder Yapısı	2</a></p><p><a href="#_fnrr5kcif39b">1.1.1 Logic	2</a></p><p><a href="#_wg6kw5pon73i">1.1.1.1 Grid	2</a></p><p><a href="#_nj4zpvfnqhfk">1.1.1.2 Items	2</a></p><p><a href="#_3fy7t3zfhwc7">1.1.1.3 Logic Interfaces	2</a></p><p><a href="#_wc9pqn4wrjcy">1.1.1.4 Systems	3</a></p><p><a href="#_t5wai7nr9ucv">1.1.1.5 Builders &amp; Factories	3</a></p><p><a href="#_v4guvbibnq9f">1.1.2 View	3</a></p><p><a href="#_q9yzi1vl6g0q">1.1.2.1 Grid	3</a></p><p><a href="#_wnqwt1vil6yn">1.1.2.2 UI	3</a></p><p><a href="#_2m9zae71ob89">1.1.2.3 FeedBack	3</a></p><p><a href="#_yo25x0aydh4a">1.1.2.4 Infrastructure	4</a></p><p><a href="#_7b2872lqxfuc">1.1.3 Managers &amp; Controllers	4</a></p><p><a href="#_pjluxgrmqv2j">1.1.3.1 Manager Interfaces	4</a></p><p><a href="#_gr19qqd5j5s5">1.1.4 ScriptableObjects	4</a></p><p><a href="#_a3ijp5lty887">1.1.4.1 Data &amp; Database	4</a></p><p><a href="#_hbapkar32biz">1.1.4.2 Item Definitions	4</a></p><p><a href="#_dqv630lej1z1">1.1.5 Algorithm &amp; Enums &amp; Utils	5</a></p><p><a href="#_6ub3j67x6kb0">1.2 Data Flow	5</a></p><p><a href="#_ot8mwnyos7me">1.3 Core Mechanics &amp; Algorithms	7</a></p><p><a href="#_vo84cgmj2qmp">1.3.1 GridController.ProcessClick()	7</a></p><p><a href="#_km904ie1jbv6">1.3.2 MatchSystem &amp; MatchFinder	8</a></p><p><a href="#_8e8lepr4zy5v">1.3.2.1 MatchSystem	8</a></p><p><a href="#_cdbrczao6uzs">1.3.2.2 MatchFinder	8</a></p><p><a href="#_4z4fs9i1crgf">1.3.3 Fall &amp; Fill Systems	8</a></p><p><a href="#_7s8tgffi4zwv">1.3.3.1 Fall System	8</a></p><p><a href="#_c2f5rylypyvn">1.3.3.2 Fill System	8</a></p><p><a href="#_ben976puqoet">1.3.4 RocketSystem	8</a></p><p><a href="#_34sxv1vrlbgq">1.3.5 BottomCollectSystem	9</a></p><p><a href="#_8xrntuj7j23s">1.3.6 Goal &amp; Spawn-Quota System	9</a></p><p><a href="#_lt38brh72z0x">1.4 View Layer	9</a></p><p><a href="#_8md5gyjfm5mm"><strong>2. Data Structures (Geliştirilebilirlik)	10</strong></a></p><h1><a id="_2cuy8o2au9vw"></a><strong>1.Design Pattern and Code Architecture </strong></h1><p>Kod yapısı tasarlanırken, Separation of Concerns ilkesine uygulanmalıdır. Kod yapısı kurulurken Logic ve View olarak iki ana katmana ayrılmalı ve bu katmanlar arası iletişim Event yapılarıyla kurulmalıdır. Belli durumlarda farklı design patternler kullanılmakla beraber genel yapı yoğunlukla MVC/MVP mimarisine uyacak şekilde yazılmış bir kod dizini oluşturulmalıdır. Logic katmanı yazılırken saf C# kullanılmalı ve UnityEngine tarafından izole edilmelidir. View tarafında ise MonoBehaviour class yapısı kullanılarak oyuncunun ekranda göreceği görsel katman oluşturulmalıdır. Bu iki yapı birbirine Controller/Presenter yapılarıyla bağlanmalıdır. Data akışını daha detaylı anlayabilmek açısından dosya yapısı ve scriptlerin açıklaması aşağıda yapılmıştır.</p><h2><a id="_auxv3i5qcasl"></a><strong>1.1. Folder Yapısı</strong></h2><h3><a id="_fnrr5kcif39b"></a><strong>1.1.1 Logic  </strong></h3><p>Logic katmanının dosya yapısı <strong>Grid</strong>, <strong>Items</strong>,<strong> Logic</strong> <strong>Interfaces</strong>, <strong>Systems </strong>ve <strong>Builders&amp;Factories</strong> olarak beşe ayrılmıştır. </p><h4><a id="_wg6kw5pon73i"></a>1.1.1.1 Grid </h4><ul><li><strong>GridPosition: </strong>bir struct yapısı olup, oyun esnasında Grid üzerindeki pozisyonların rahatça bulunabilmesi ve işlem yapılabilmesi için yazılmıştır. </li><li><strong>Cell:</strong> Bu class Grid üzerindeki her ayrı cell’i temsil etmek için yazılmış olup, içinde GridPosition değeri, içindeki Item type ve Neighbors listesi bulunmaktadır. </li><li><strong>Grid: </strong>Her level için verilen row ve column değerlerine göre içinde bir Cell yapısı tutan bir  cells matrisi bulundurur. </li></ul><h4><a id="_nj4zpvfnqhfk"></a>1.1.1.2 Items </h4><p>Bu dosyada <strong>Cube</strong>, <strong>Duck</strong>, <strong>Balloon</strong>, <strong>ColoredBalloon</strong>, <strong>Box</strong>, ve <strong>Rocket</strong> classları bulunmaktadır. Bu class’ların hepsi ortak olarak IGridItem interface’ini kullanmakla beraber, farklı interface’lere sahip olarak farklı variable veya method’lara sahip olabilirler.</p><h4><a id="_3fy7t3zfhwc7"></a>1.1.1.3 Logic Interfaces </h4><p>Bu folderda <strong>IBottomCollectable</strong>, <strong>IColored</strong>, <strong>IDamageable</strong>, <strong>IFallable</strong>, <strong>IFlyableToGoal</strong>, <strong>IGridItem</strong>, ve <strong>IMatchable</strong> interface’leri bulunmaktadır. Bu interface’ler belli özellikleri itemler arasında dağıtmakta kullanılmıştır. ( örn. Duck class’ı IBottomCollectable interface’ine sahiptir fakat IColored interface’ine sahip değildir.) </p><p>Aynı zamanda <strong>IFallSystem</strong>, <strong>IFillSystem</strong>, <strong>IMatchSystem</strong>, <strong>IMatchFinder</strong>, <strong>IBottomCollect</strong>, <strong>IRocketSystem</strong> interface’leri bulunur ve dependency injection amacıyla kullanılmaktadırlar.</p><h4><a id="_wc9pqn4wrjcy"></a>1.1.1.4 Systems </h4><p>Bu folderda <strong>FallSystem</strong>, <strong>FillSystem</strong>, <strong>MatchSystem</strong>, <strong>RocketSystem</strong>, <strong>BottomCollectSystem </strong>olarak 5 class yapısı bulunmaktadır. Buradaki her class ismiyle belirtilen sistemleri logic tarafında kontrol etmekle görevlidir. </p><h4><a id="_t5wai7nr9ucv"></a>1.1.1.5 Builders &amp; Factories</h4><ul><li><strong>ItemFactory: </strong>Logic tarafındaki item nesnelerinin (Cube, Rocket vb.) yaratılmasından sorumlu static bir class'tır. CreateRandomCube() ve CreateRocket() gibi fonksiyonların yanında, Fill işleminde çağrılan CreateRandomItem() fonksiyonu bir fabrika görevi görmektedir.</li><li><strong>LevelBuilder:</strong> Oyun başında LevelData içindeki dizilime göre Grid'in kurulmasından sorumludur. </li></ul><h3><a id="_v4guvbibnq9f"></a><strong>1.1.2 View</strong></h3><h4><a id="_q9yzi1vl6g0q"></a>1.1.2.1 Grid</h4><p>Bu Folder’da <strong>GridView</strong>,<strong> ItemView</strong>, ve <strong>RocketView</strong> olmak üzere 3 class bulunmaktadır.</p><ul><li><strong>GridView:</strong> Logic katmanında gerçekleşen olayları event’ler aracılığıyla dinleyerek grid üzerindeki görsellerin ne tepkiler vereceğini yönetir.</li><li><strong>ItemView: </strong>Grid üzerinde bulunan taşların sahnedeki karşılığını temsil eder ve <strong>ItemViewPrefab </strong>objesinde bulunur. Objelerin yapacağı animasyonları organize etmekle görevlidir.</li><li><strong>RocketView:</strong> <strong>ItemView </strong>class’ından inherit alır, ve Rocket’in görsel yapısı diğer itemlerden farklı olduğu için sahnedeki Rocket’in animasyon yapılarını organize eder.</li></ul><h4><a id="_wnqwt1vil6yn"></a>1.1.2.2 UI</h4><ul><li><strong>UIPresenter: </strong>Oyunun Goal UI’larının oluşumunu sağlar, ve ayrıca grid’deki goal itemler’in hangi yere uçacağı bilgisini <strong>GridView’</strong>a sağlamakla görevlidir.</li><li><strong>GoalUIItem: </strong>Ekranda görsel olarak görünen <strong>goalUIPrefab</strong>’ının sahip olduğu class yapısıdır. Bu prefabın oyun esnasında verdiği tepkileri ve animasyonları uygulamakla görevlidir. </li><li><strong>GoalFlyTarget: </strong>Bir struct yapısı olup<strong> goalUIPrefab</strong>’ın position ve scale bilgisini tutar.</li></ul><h4><a id="_2m9zae71ob89"></a>1.1.2.3 FeedBack</h4><ul><li><strong>Particle Reactor: </strong>Kendisine gelen eventleri dinleyerek sahnede particle effect’leri üretmekle görevlidir.</li><li><strong>ParticleEffect: </strong>Sahnede yaratılan particle effect’lerin animasyonlarını yönetmekle görevlidir.</li><li><strong>AudioReactor: </strong>Kendisine gelen eventleri dinleyerek doğru sesleri çalmakla görevlidir.</li></ul><h4><a id="_yo25x0aydh4a"></a>1.1.2.4 Infrastructure </h4><ul><li><strong>ItemViewFactory: </strong>Ekranda gözüken görsellere sahip objelerin doğru eventler sonucu yaratılmasıyla görevlidir.</li><li><strong>ItemPool: </strong>Oyunda kullanılan item prefablarının bir pool sisteminde toplanıp sürekli bir Instantiate/Destroy döngüsünün önüne geçmekle görevlidir.</li></ul><h3><a id="_7b2872lqxfuc"></a><strong>1.1.3 Managers &amp; Controllers</strong></h3><ul><li><strong>GameManager: </strong>Bir Composition Root görevi görmekle birlikte kendine gelen eventler sonucu oyuncunun tıklamalarını yönetir.</li><li><strong>GridController: </strong>Logic tarafında kurulan Match/Fall/Fill işlemlerini asenkron yapılarla yöneterek birbirine bağlayan sistemdir. Oyunun akışını yönetir.</li><li><strong>GoalManager: </strong>Oyunun goal, moves, gibi değerlerini tutarak Logic katmanında gerçekleşen olaylara göre bunları düzenler.</li><li><strong>InputManager: </strong>Oyuncudan gelen tıklamaları ekran pozisyonundan dünya pozisyonuna çevirerek sisteme verir.</li><li><strong>EventManager: </strong>Logic katmanı ve View katmanının birbirlerine referans vermeden data akışı sağlamasına imkan tanır.</li></ul><h4><a id="_pjluxgrmqv2j"></a>1.1.3.1 Manager Interfaces</h4><p>Manager sınıflarının diğer katmanlarla haberleşirken kullandığı interface’lerin bulunduğu dosyadır.</p><h3><a id="_gr19qqd5j5s5"></a>1.1.4 <strong>ScriptableObjects</strong></h3><h4><a id="_a3ijp5lty887"></a>1.1.4.1 Data &amp; Database</h4><p>Bu klasörde oyunun genel ayarları, level yapıları ve veri tabanları tutulmaktadır.</p><ul><li><strong>LevelData:</strong> Hem goal, moves, rows, columns gibi değerleri tutmakla beraber Editör kodları sayesinde Inspector’dan grid dizilimi yapmamızı sağlayan bir gridLayout listesi tutar. </li><li><strong>GameSettingsData: </strong>Oyunda gerçekleşen animasyon, cell genişliği, grid yerleşimi gibi konularda kullanılan parametreleri değiştirilebilir kılar.</li><li><strong>AudioDatabase: </strong>Oyunda kullanılan seslerin datasını tutar.</li><li><strong>ItemDatabase: </strong>Her item oluşturduğumuzda bunu inspector’dan koda atmak yerine bu data içinden tutulmasını sağlar. ItemDefinition scriptableObject datası kabul eden bir List tutar.</li></ul><h4><a id="_hbapkar32biz"></a>1.1.4.2 Item Definitions</h4><ul><li><strong>Item Definition: </strong>ItemDefinition scriptableObject’i oluşturulan itemler için Color, Sprite, Prefab gibi değişkenleri tutmamızı ve bu item’lerin creation logiclerini belirler.</li></ul><p>Her objenin definition’ı için <strong>ItemDefinition</strong>’dan inherit alan yeni bir class oluşturulur. Ekstra bir method veya override edilmesi gereken bir method varsa burda tanımlanır.</p><h3><a id="_dqv630lej1z1"></a><strong>1.1.5 Algorithm &amp; Enums &amp; Utils </strong></h3><p>Bu klasörde ortak hesaplamalar, algoritmalar ve enum yapıları tutulmaktadır.</p><ul><li><strong>MatchFinder: </strong>Logic tarafındaki <strong>MatchSystem</strong> tarafından çağırılan ve BFS algoritması kullanarak match gruplarını bulmayı sağlayan methodu tutar.</li><li><strong>Utils: </strong>Belli yardımcı, matematiksel veya Unity bazlı dönüşüm, fonksiyonları tutan static class tipidir.</li><li><strong>Enums: ItemColor</strong>, <strong>RocketOrientation</strong>, <strong>DamageType </strong>enum’ları belli sabit tipleri sınıflandırmaya yararlar.</li></ul><h2><a id="_6ub3j67x6kb0"></a><strong>1.2 Data Flow</strong></h2><p>Oyunun başlangıcında <strong>GameManager</strong> <strong>Awake() </strong>fonksiyonunun içinde oyunun injection yapısını kurar ve gerekli fonksiyonları başlatarak sahnenin kurulmasını sağlar. GameManager.Awake()<strong> </strong>içindeki dependency injection sistemi aşağıda gösterilen şekilde ve sırayla gerçekleşmektedir.</p><p><img src="images/blog/arch_img01.png" /></p><p>GameManager aynı zamanda <strong>HandleClick()</strong> fonksiyonu ile InputManager’dan gelen event’i dinleyerek GridController’ın içindeki mantığı çalıştırır. Sistem akışı aşağıda gösterildiği gibi gerçekleşmektedir.</p><p><strong><img src="images/blog/arch_img02.png" /></strong></p><p>GridController’ın sahip olduğu <strong>ProcessClick() </strong>fonksiyonu kullanılarak kullanıcın yaptığı tıklama işleme alınır ve bunlar sonucunda belli eventler ateşlenir. Sonrasında bu eventlere bağlı observerlar gerekli işlemleri görsel taraf için gerçekleştirir. Logic tarafının View tarafına iletilip gerekli işlemlerin yapılması aşağıda gösterildiği gibi gerçekleşmektedir.</p><p><img src="images/blog/arch_img03.png" /></p><h2><a id="_ot8mwnyos7me"></a><strong>1.3 Core Mechanics &amp; Algorithms</strong></h2><h3><a id="_vo84cgmj2qmp"></a><strong>1.3.1 GridController.ProcessClick()</strong></h3><p>Oyuncunun tıklaması sonrası GridController’daki ProcessClick() fonksiyonunun çalışması ile Gridin buna ne tepki vereceği hesaplanır. ProcessClick() fonksiyonu asenkron void bir fonksiyon olup, oyunun ana döngüsü işler. ProcessClick() fonksiyonu adım adım  aşağıda anlatılan şekilde çalışmaktadır:</p><ol><li>Fonksiyonun başlangıcında delegate injection methodu kullanılarak <strong>ignoredItems</strong> listesi view tarafından çekilir.<strong> </strong>Bu listeye ihtiyacımızın olmasının sebebi, gridde herhangi bir işlem sonrası hareket halinde olan ve animasyonunu daha bitirmemiş itemleri match hesaplamalarından çıkartmaktır.</li><li>Sonrasında kullanıcı tarafından verilen input’un grid’in üzerinde olup olmadığı, hareket eden bir iteme tıklanıp tıklanmadığı kontrolü <strong>CanProcessClick() </strong>çağırısı ile yapılır.</li><li>Fall ve Fill işlemlerinde tüm tahtayı taramak yerine column bazlı bir kontrol yapmak açısından <strong>affectedColumn</strong> listesi yaratılır ve bi kontrol bloğu başlar.</li><li>Sistem bir try bloğuna girerek <strong>ActivateItemAsync()</strong> fonksiyonunu çağırır. Bu method bir if-else bloğu içinde tıklanan objenin Rocket olup olmadığını kontrol eder.<ul><li>Eğer Rocket ise <strong>RocketSystem.ActivateRocketAsync() </strong>methodu çalıştırılır. Bu method rocketlerin griddeki başka rocketleri de tetikleyebileceği asenkron bir yapıda çalışır. Eğer rocketlerin birbirini tetiklediği bir durum ortaya çıkarsa eventler aracılığıyla GridController’daki <strong>HandleChainReaction() </strong>methodununun akışı yönetmesi sağlanır. </li><li>Eğer değil ise <strong>MatchSystem.Match(</strong>) fonksiyonunu çağırır. Bu fonksiyon <strong>MatchFinder.FindMatch()</strong> yardımcı fonksiyonunu çağırarak <strong>affectedColumns</strong>, ve <strong>WillSpawnRocket </strong>parametrelerini döner.</li></ul></li><li>try döngüsünden çıktıktan sonra elindeki <strong>affectedColumn </strong>listesi dolu olduğu sürece <strong>RunFallFillLoopAsync() </strong>fonksiyonunu çağırır. Bu fonksiyonun içi bir do-while döngüsü içerir. Bu döngü <strong>affectedColumn </strong>listesi dolu olduğu sürece çalışır. Bunun sebebi her fall/fill işleminden sonra <strong>BottomCollectSystem.CollectAsync() </strong>fonksiyonu çağırılır. Bu fonksiyon match işleminden etkilenen sütunlardaki fall/fill işlemleri bittikten sonra o sütunlarıni en alt satırındaki item’e bakarak bunun ördek olup olmadığını kontrol eder. Ördek ise geliştirici tarafından belirlenen bir delay süresince Ördek’ler toplanır ve fonksiyonun sonucunda tekrardan etkilenen sütunlar var ise return edilir ve do-while döngüsünün çalışması sağlanır.  </li></ol><p><strong>Note: </strong>Bunun yapılmasının sebebi Grid’in görsel akışını kontrol edebilmek içindir. Toon Blast oyunu izlendiğinde power-up oluşma ve rocket kullanma işlemlerinde oyuncu tıklamalarının kapatıldığı gözlenmiştir. Bu sebeple bu case çalışmasında Rocket oluşum ve kullanılma işlemlerinde grid’in kontrolüne hakim olabilmek için <strong>activeActionCount </strong>parametresi kullanılmıştır. Bu parametre ile eğer grid’de o an herhangi özel bir işlem var ise <strong>isGlobalLock </strong>boolean’ının takibi ile oyuncu inputları kabul edilmez. </p><h3><a id="_km904ie1jbv6"></a><strong>1.3.2 MatchSystem &amp; MatchFinder</strong></h3><h4><a id="_8e8lepr4zy5v"></a>1.3.2.1 MatchSystem</h4><p>MatchSystem, içindeki Match() fonksiyonunda MatchFinder.FindMatch() fonksiyonunu çağırıp eşleşen küpleri aldıktan sonra gerekli kontrolleri yapar. Bu kontroller sonucu <strong>ClearMatchCells()</strong> ve <strong>DamageNeighbors() </strong>fonksiyonlarını çağırır. <strong>ClearMatchCells() </strong>match’in koşuluna göre itemler yok etmek veya merge etmek için eventleri tetikler. <strong>DamageNeigbors() </strong>methodu eşleşen gruptaki cell’lerin komşularına bakar ve eğer IDamageable interface’ine sahip bir obstacle var ise ona hasar verir ve gerekli eventleri tetikler. </p><h4><a id="_cdbrczao6uzs"></a>1.3.2.2 MatchFinder</h4><p>MatchFinder Class’ı istenen match durumunu bulmak için HashSet ve Queue collection’ları kullanan bir Breadth-First-Search algoritmasına sahiptir. Cell classlarından oluşan Queue collection’ı tıklanan Cell queue’ye eklendikten sonra bu liste sıfırlanana kadar while döngüsü içinde arama yapar. Bu yapı sıradaki hücreyi çekip onun komşularına bakarak aynı renkli bir eşleşme bulup bulmadığına bakar ve bunları matchedCells listesine ekler. Uğradığı pozisyonlara tekrar uğramamak için ziyaret edilen Cell’leri bir HashSet yapısı olan visited collection’ına ekler. Bakılan hücrenin komşularından eşleşme sağlayan Cell’ler queue’ye eklenerek while döngüsünün devamlılığı sağlanır. </p><h3><a id="_4z4fs9i1crgf"></a><strong>1.3.3 Fall &amp; Fill Systems</strong></h3><h4><a id="_7s8tgffi4zwv"></a>1.3.3.1 Fall System</h4><p>FallSystem class’ı içinde yalnızca bir Fall() fonksiyonu bulundurur. Fall() fonksiyonu affectedColumns parametresi alır ve etkilenen column’larda foreach döner. Döngüye giren sütun en aşağıdaki row’dan başlanarak taranırken two-pointer yöntemi kullanılır. </p><h4><a id="_c2f5rylypyvn"></a>1.3.3.2 Fill System </h4><p>FillSystem Fill() fonksiyonu en üst satırdan başlayarak verilen sütunu aşağıya doğru bir foreach içinde döner ve dolu bir hücre bulana kadar bulduğu Cell’ler için Fill işlemini gerçekleştirir. Fill işleminde gerekli random itemler yaratılır ve TriggerItemFill eventi tetiklenir.<strong>	</strong></p><h3><a id="_ben976puqoet"></a><strong>1.3.4 RocketSystem</strong></h3><p>RocketSystem’in içindeki <strong>ActivateRocketAsync()</strong> methodu ile rocket’in hareketini gerçekleştirir. bir distance parametresi ve GridPosition[] activeDirections listesi ile Cell’leri tek tek iki yönde ilerler. Task.Delay() yapısı sayesinde her Cell taramasından sonra designer tarafından GameSettings’de verilen süre kadar bekler. Geçtiği her hücrede<strong> ApplyDamage() </strong>methodunu uygular. Bu method sayesinde eğer geçtiği hücre’de Rocket varsa chain reaction başlatabilir ve item’lere hasar verebilir. RocketSystem’in içinde bulunan <strong>SpawnRocketAsync()</strong> fonksiyonu gerekli şartlar sağlandığında Rocket oluşumunu yürürtmek için GridController tarafından çağırılır. </p><p><strong>	</strong></p><h3><a id="_34sxv1vrlbgq"></a><strong>1.3.5 BottomCollectSystem</strong></h3><p>BottomCollectSystem Class’ının içinde asenkron çalışan CollectAsync() methodu Duck gibi en alt row’a düşünce toplanan itemleri toplamakta kullanılır. Sütunun en aşağı noktasındaki item kontrol edilir ve eğer item IBottomCollectable ise item toplanır. Animasyonlarla tutarlı bir işlem olabilmesi için GameSettings’de belirlenen süre kadar Task.Delay() aracılığıyla işlemler geciktirilir. </p><h3><a id="_8xrntuj7j23s"></a><strong>1.3.6 Goal &amp; Spawn-Quota System</strong></h3><p><strong>GoalManager </strong>class’ı level için verilen Moves ve Goals değerlerinin işlenmesinden sorumludur. Toon Blast oyunu incelendiğinde IFallable objelerin eğer istenen goal miktarı grid’de bulunan miktarından az ise Fill işlemine eklendiği görülmüştür. Bu sebeple Initialize() fonksiyonunu içinde LevelData’da verilen TargetAmount ile o an tahtada bulunan miktarının karşılaştırılması sonucu; eğer IFallable ise grid’de eksik olan kadar bir kota oluşturulup <strong>CreateRandomItem() </strong>çağrısına verilir; eğer IFallable değil ise TargetAmount grid üzerindeki sayısına eşitlenir. </p><h2><a id="_lt38brh72z0x"></a><strong>1.4 View Layer </strong></h2><p>View katmanında oyuncunun gördüğü item ve grid animasyonları ana olarak <strong>GridView</strong> ve <strong>ItemView</strong> kodları üzerinden yapılmaktadır. </p><ul><li><strong>GridView:</strong> Grid üzerinde gerçekleşen animasyon olaylarını event-driven bir şekilde yürütmekle görevlidir. GridView <strong>viewDictionary </strong>adında IGridItem ve ItemView ikililerini tutan bir collection yapısı barındırır. Bu yapı o an sahnede bulunan item’lerin datasını tutar ve Logic layer’ıyla tutarlı olacak şekilde animasyonları oynatır.  Aynı zamanda<strong> animatingItems </strong>adında bi HashSet collection’ı tutarak o an grid’de hareket halindeki item’leri saklar. GameManager GridController’u oluşturulurken dependency injection yöntemiyle gridView’ın <strong>GetAnimatingItems()</strong> fonksiyonunu GridController’a delegate olarak verir ve bu fonksiyon <strong>animatingItems’</strong>i return eder. Bunun dışında Grid oluşumunda borders scaling işlemini, gridin konumlanması ve camera’nın orthographic size’ını ayarlanmasını gerçekleştirir. </li><li><strong>ItemView: </strong>Grid üzerinde bulunan itemlerin sahnedeki görsel karşılığını temsil eder ve ItemViewPrefab objesinde bulunur. GridView tarafından çağırılan animasyon fonksiyonlarını bir queue yapısında tutarak sırayla oynatılmasından görevlidir. İçerisinde IsAnimating parametresi taşır ve değişimler OnAnimationStateChanged event’ine bildirilmesi ile animatingItems collection’ında kullanılır. </li><li><strong>RocketView: </strong>ItemView class'ından inherit alır ve <strong>RocketPrefab</strong>’ında bulunur. Rocket animasyonları diğer Item animasyonlarından farklı olduğu için belli method’lar ovverride edilerek kullanılır.</li></ul><h1><a id="_8md5gyjfm5mm"></a>2. <strong>Data Structures (Geliştirilebilirlik)</strong></h1><p>Oyunun data yapısı ScriptableObject yapısı kullanılarak kurulmuş olup üstüne eklenebilir bir yapı inşa edilmiştir. Oyuna yeni bir item türü eklemek için<strong> ItemDefinition </strong>abstract class’ından inherit alan bir definition scripti yazılarak yaratılacak itemin Logic type, Sprite, Prefab, ColoredSprite gibi parametrelerini tutar ve iki kısmı birbirine bağlar. ItemDefinition tipinde bir liste tutan <strong>ItemDatabase </strong>class’ıyla da yeni yaratılan itemler tek bi alanda toplanır, ve oyun kod yapısını oluşturulan ItemDatabase yapısı referans verilir. </p><p><strong>GameSettingsData </strong>class’ı da scriptableObjects türünde  yaratılmış olup içerisinde kodların birçok yerinde kullanılan ve animasyon zamanlaması, delay zamanlaması, fall hızı… gibi ortak değerleri tutar ve bu değerlerin editörden değiştirilmesine olanak verir.</p><p><strong>LevelDataEditor</strong>, <strong>LevelData </strong>class’ında tutulan gridLayout listesininin Unity Editor’de 2 boyutlu matris yapısında görünmesini sağlar. Ayrıca istenilen Cell’lere itemlerin yerleştirilebilmesini sağlar.</p>
+        </div>
+    </div>
 
-    <h3>1.1. Folder Structure</h3>
-    
-    <h4>1.1.1 Logic</h4>
-    <p>The file structure of the Logic layer is divided into five main parts: <strong>Grid</strong>, <strong>Items</strong>, <strong>Logic Interfaces</strong>, <strong>Systems</strong>, and <strong>Builders & Factories</strong>.</p>
-    <ul>
-      <li><strong>Grid:</strong>
-        <ul>
-          <li><code>GridPosition</code>: A struct written to easily locate and process positions on the grid during gameplay.</li>
-          <li><code>Cell</code>: Represents each distinct cell on the grid, holding a <code>GridPosition</code>, Item type, and a list of Neighbors.</li>
-          <li><code>Grid</code>: Contains a 2D matrix of cells built according to the row and column values for each level.</li>
-        </ul>
-      </li>
-      <li><strong>Items:</strong> Contains classes like <code>Cube</code>, <code>Duck</code>, <code>Balloon</code>, <code>ColoredBalloon</code>, <code>Box</code>, and <code>Rocket</code>. All implement the <code>IGridItem</code> interface, but they can possess different variables or methods by implementing different secondary interfaces.</li>
-      <li><strong>Logic Interfaces:</strong> Contains interfaces like <code>IBottomCollectable</code>, <code>IColored</code>, <code>IDamageable</code>, <code>IFallable</code>, <code>IFlyableToGoal</code>, <code>IGridItem</code>, and <code>IMatchable</code>. These distribute specific properties across items (e.g., Duck has <code>IBottomCollectable</code> but not <code>IColored</code>). Interfaces like <code>IFallSystem</code>, <code>IFillSystem</code>, <code>IMatchSystem</code>, etc., are also kept here for dependency injection.</li>
-      <li><strong>Systems:</strong> Contains 5 classes: <code>FallSystem</code>, <code>FillSystem</code>, <code>MatchSystem</code>, <code>RocketSystem</code>, and <code>BottomCollectSystem</code>. Each handles its respective logic on the board.</li>
-      <li><strong>Builders & Factories:</strong>
-        <ul>
-          <li><code>ItemFactory</code>: A static class responsible for creating item objects. Acts as a factory during the Fill process with methods like <code>CreateRandomItem()</code>.</li>
-          <li><code>LevelBuilder</code>: Responsible for setting up the Grid at the start of the game based on <code>LevelData</code>.</li>
-        </ul>
-      </li>
-    </ul>
-
-    <h4>1.1.2 View</h4>
-    <ul>
-      <li><strong>Grid:</strong> 
-        <ul>
-          <li><code>GridView</code>: Listens to logic events and manages how grid visuals react.</li>
-          <li><code>ItemView</code>: Represents the visual counterpart of grid items in the scene and manages their animations.</li>
-          <li><code>RocketView</code>: Inherits from <code>ItemView</code> to specifically manage the unique visual structure and animations of the Rocket.</li>
-        </ul>
-      </li>
-      <li><strong>UI:</strong>
-        <ul>
-          <li><code>UIPresenter</code>: Manages the creation of Goal UIs and tells <code>GridView</code> where goal items should fly.</li>
-          <li><code>GoalUIItem</code>: The class for the visual goal prefab on screen, handling its reactions and animations.</li>
-          <li><code>GoalFlyTarget</code>: A struct storing the position and scale of the target.</li>
-        </ul>
-      </li>
-      <li><strong>FeedBack:</strong> Includes <code>ParticleReactor</code>, <code>ParticleEffect</code>, and <code>AudioReactor</code> to listen to events and play the correct visual effects and sounds.</li>
-      <li><strong>Infrastructure:</strong> Includes <code>ItemViewFactory</code> for instantiating visuals and <code>ItemPool</code> for pooling item prefabs to avoid costly Instantiate/Destroy loops.</li>
-    </ul>
-
-    <h4>1.1.3 Managers & Controllers</h4>
-    <ul>
-      <li><code>GameManager</code>: Acts as the Composition Root and manages player clicks via events.</li>
-      <li><code>GridController</code>: Manages the Match/Fall/Fill processes asynchronously on the logic side, directing the flow of the game.</li>
-      <li><code>GoalManager</code>: Holds and updates logic variables like goals and remaining moves.</li>
-      <li><code>InputManager</code>: Converts screen clicks to world positions and sends them to the system.</li>
-      <li><code>EventManager</code>: Allows data flow between Logic and View layers without direct references.</li>
-    </ul>
-
-    <h4>1.1.4 ScriptableObjects</h4>
-    <ul>
-      <li><strong>Data & Database:</strong>
-        <ul>
-          <li><code>LevelData</code>: Holds goals, moves, rows, columns, and a custom inspector gridLayout matrix.</li>
-          <li><code>GameSettingsData</code>: Configurable parameters for animations, cell width, grid offset, etc.</li>
-          <li><code>AudioDatabase</code>: Holds the audio clip data.</li>
-          <li><code>ItemDatabase</code>: A list of <code>ItemDefinition</code> scriptable objects to centralized item creation logic.</li>
-        </ul>
-      </li>
-      <li><strong>Item Definitions:</strong> <code>ItemDefinition</code> holds logic type, color, sprite, and prefab data for items.</li>
-    </ul>
-
-    <h4>1.1.5 Algorithm & Enums & Utils</h4>
-    <ul>
-      <li><code>MatchFinder</code>: Uses Breadth-First Search (BFS) to find match groups.</li>
-      <li><code>Utils</code>: Static class for math and Unity conversion helpers.</li>
-      <li><code>Enums</code>: Standardized types like <code>ItemColor</code>, <code>RocketOrientation</code>, <code>DamageType</code>.</li>
-    </ul>
-
-    <h3>1.2 Data Flow</h3>
-    <p>At the start of the game, <code>GameManager.Awake()</code> sets up the dependency injection and starts necessary functions to build the scene. The dependency injection flow occurs in the following order:</p>
-    <img src="images/image1.png" style="width: 100%; border-radius: 8px; margin: 24px 0; border: 1px solid var(--line-2);" alt="Initialization Data Flow Diagram">
-
-    <p>Simultaneously, <code>GameManager</code> listens to events from <code>InputManager</code> via the <code>HandleClick()</code> function, which triggers the logic within <code>GridController</code>. The system flow happens as shown below:</p>
-    <img src="images/image2.png" style="width: 100%; border-radius: 8px; margin: 24px 0; border: 1px solid var(--line-2);" alt="Input Processing Flow Diagram">
-    
-    <p>The <code>ProcessClick()</code> function in <code>GridController</code> processes the click, firing necessary events. Observers attached to these events then execute the required actions for the visual layer.</p>
-
-    <h2>1.3 Core Mechanics & Algorithms</h2>
-
-    <h3>1.3.1 GridController.ProcessClick()</h3>
-    <p>This asynchronous method processes player input step-by-step:</p>
-    <ol>
-      <li><strong>Ignored Items:</strong> Uses delegate injection to fetch <code>ignoredItems</code> from the view, preventing matching calculations on items that are currently moving or animating.</li>
-      <li><strong>Validation:</strong> Calls <code>CanProcessClick()</code> to ensure the clicked object is valid and not moving.</li>
-      <li><strong>Affected Columns:</strong> Creates an <code>affectedColumn</code> list to target only specific columns for fall/fill instead of scanning the entire board.</li>
-      <li><strong>Execution:</strong> Calls <code>ActivateItemAsync()</code>. If it's a Rocket, <code>RocketSystem.ActivateRocketAsync()</code> is executed, managing chain reactions via <code>HandleChainReaction()</code>. If it's a regular match, <code>MatchSystem.Match()</code> is called.</li>
-      <li><strong>Fall/Fill Loop:</strong> A <code>do-while</code> loop calls <code>RunFallFillLoopAsync()</code> as long as <code>affectedColumn</code> has elements. After falling/filling, <code>BottomCollectSystem.CollectAsync()</code> checks if items like Ducks have reached the bottom. If they have, they are collected and the loop continues to refill the grid.</li>
-    </ol>
-
-    <h3>1.3.2 MatchSystem & MatchFinder</h3>
-    <ul>
-      <li><strong>MatchSystem:</strong> Calls <code>MatchFinder.FindMatch()</code> to get matching cubes. If valid, it triggers <code>ClearMatchCells()</code> to destroy or merge items, and <code>DamageNeighbors()</code> to apply damage to adjacent obstacles (like Boxes) implementing <code>IDamageable</code>.</li>
-      <li><strong>MatchFinder:</strong> Uses a <strong>Breadth-First Search (BFS)</strong> algorithm with <code>HashSet</code> (for visited nodes) and <code>Queue</code> collections. It queues the clicked cell, searches neighbors for matching colors, and loops until the entire connected group is found.</li>
-    </ul>
-
-    <h3>1.3.3 Fall & Fill Systems</h3>
-    <ul>
-      <li><strong>Fall System:</strong> Iterates through affected columns starting from the bottom row, using a two-pointer approach to pull falling items down.</li>
-      <li><strong>Fill System:</strong> Iterates from the top row downwards. When it finds an empty cell, it generates a random item and triggers the fill event.</li>
-    </ul>
-
-    <h3>1.3.4 RocketSystem</h3>
-    <p>The <code>ActivateRocketAsync()</code> method processes the rocket's movement. It uses a distance parameter and an <code>activeDirections</code> list to advance cell by cell in two directions. Thanks to <code>Task.Delay()</code>, it waits based on settings defined in <code>GameSettings</code>, applying <code>ApplyDamage()</code> to each cell. This allows rockets to trigger chain reactions on other items.</p>
-
-    <h3>1.3.5 BottomCollectSystem</h3>
-    <p>Asynchronously collects items like Ducks that fall to the bottom row. It checks the bottom-most item of affected columns, and if it has the <code>IBottomCollectable</code> interface, it triggers collection, pausing briefly via <code>Task.Delay()</code> to sync with animations.</p>
-
-    <h3>1.3.6 Goal & Spawn-Quota System</h3>
-    <p>Managed by <code>GoalManager</code>. When generating the board, if the required target amount of an <code>IFallable</code> object is not met on the grid, the remaining amount is tracked as a quota. The <code>CreateRandomItem()</code> factory method consumes this quota during Fill operations to ensure the player has a chance to complete the goals.</p>
-
-    <h2>1.4 View Layer</h2>
-    <p>The View layer operates on an event-driven queue system via <code>GridView</code> and <code>ItemView</code>.</p>
-    <ul>
-      <li><strong>GridView:</strong> Holds a <code>viewDictionary</code> mapping <code>IGridItem</code> logic objects to <code>ItemView</code> visual objects. It also maintains a <code>HashSet</code> of <code>animatingItems</code>. It provides the <code>GetAnimatingItems()</code> delegate to the <code>GridController</code> to lock player input when necessary.</li>
-      <li><strong>ItemView / RocketView:</strong> Manages visual animations via a queue to ensure they play sequentially. It broadcasts state changes via <code>OnAnimationStateChanged</code>.</li>
-    </ul>
-
-    <h2>2. Data Structures (Scalability)</h2>
-    <p>The game's data structure is built on top of <code>ScriptableObject</code>s, allowing rapid expansion. To add a new item, a developer creates a new definition script inheriting from <code>ItemDefinition</code>, setting its Logic type, Sprite, and Prefab. This asset is added to the <code>ItemDatabase</code>.</p>
-    <p><code>GameSettingsData</code> allows tweaking animation timing, delays, and fall speeds without touching code. Furthermore, <code>LevelData</code> integrates with a custom Unity Editor inspector, enabling level designers to visually paint the 2D grid matrix directly within Unity.</p>
-
-  </div>
-</main>
-
-<footer style="text-align: center; padding: 40px; color: var(--fg-faint); font-size: 12px; font-family: var(--mono); letter-spacing: 0.1em; border-top: var(--rule);">
-  © 2025 BUĞRACAN BOZKURT
-</footer>
+    <footer class="footer">
+        © 2025 BUĞRACAN BOZKURT
+    </footer>
 
 </body>
 </html>
