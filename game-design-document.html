@@ -30,30 +30,31 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html, body { 
+  height: 100%; 
+  overflow: hidden; /* Prevent double scrollbars */
+}
 
 body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--sans);
   font-weight: 300;
-  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  display: flex;
+  flex-direction: column;
 }
 
 a { color: inherit; text-decoration: none; }
 
 .nav {
-  position: fixed; top: 0; left: 0; right: 0;
+  flex-shrink: 0;
   height: 72px; padding: 0 var(--pad-x);
   display: flex; align-items: center; justify-content: space-between;
   border-bottom: 1px solid transparent;
   z-index: 100;
-  transition: all .3s ease;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background: rgba(6,11,19,0.85);
+  background: var(--bg-2);
   border-bottom: var(--rule);
 }
 
@@ -68,103 +69,53 @@ a { color: inherit; text-decoration: none; }
   border-radius: 50%; box-shadow: 0 0 8px var(--accent-glow);
 }
 
-.article-container {
-  max-width: 800px;
-  margin: 120px auto 100px;
-  padding: 0 var(--pad-x);
-}
-
-.article-header {
-  margin-bottom: 60px;
-  text-align: center;
-}
-
-.article-title {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-style: italic;
-  font-size: clamp(36px, 5vw, 64px);
-  line-height: 1.1;
-  margin-bottom: 20px;
-  color: var(--fg);
-}
-
-.article-meta {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  color: var(--accent);
-  text-transform: uppercase;
-}
-
-.article-content h2 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-style: italic;
-  font-size: 32px;
-  color: var(--fg);
-  margin: 60px 0 20px;
-  border-bottom: var(--rule);
-  padding-bottom: 10px;
-}
-
-.article-content h3 {
-  font-family: var(--sans);
-  font-weight: 500;
-  font-size: 20px;
-  color: var(--fg);
-  margin: 40px 0 16px;
-}
-
-.article-content p {
-  color: var(--fg-dim);
-  margin-bottom: 20px;
-  font-size: 16px;
-}
-
-.article-content ul {
-  color: var(--fg-dim);
-  margin-bottom: 24px;
-  padding-left: 20px;
-}
-
-.article-content li {
-  margin-bottom: 10px;
-}
-
-.article-content strong {
-  color: var(--fg);
-  font-weight: 500;
-}
-
-.article-content table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 32px 0;
-  font-size: 15px;
-}
-
-.article-content th, .article-content td {
-  border: var(--rule);
-  padding: 12px 16px;
-  text-align: left;
-  color: var(--fg-dim);
-}
-
-.article-content th {
-  background: var(--bg-2);
-  color: var(--fg);
-  font-weight: 500;
-}
-
 .btn-back {
   display: inline-flex; align-items: center; gap: 8px;
   font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em;
   color: var(--fg-dim); text-transform: uppercase;
-  margin-bottom: 40px; transition: color .2s ease;
+  transition: color .2s ease;
 }
 
 .btn-back:hover { color: var(--accent); }
+
+.pdf-container {
+  flex-grow: 1;
+  width: 100%;
+  padding: 20px var(--pad-x);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.pdf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.pdf-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 24px;
+  color: var(--fg);
+}
+
+.iframe-wrapper {
+  flex-grow: 1;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+  background: #fff; /* PDFs usually need white bg */
+}
+
+.iframe-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
 
 </style>
 </head>
@@ -175,117 +126,18 @@ a { color: inherit; text-decoration: none; }
     <span class="nav__dot"></span>
     <span class="nav__name">BUĞRACAN BOZKURT</span>
   </a>
+  <a href="index.html#blog" class="btn-back">← Back to Portfolio</a>
 </header>
 
-<main class="article-container">
-  <a href="index.html#blog" class="btn-back">← Back to Portfolio</a>
-  
-  <header class="article-header">
-    <h1 class="article-title">Game Design Document: Pirate Blast</h1>
-    <div class="article-meta">Game Design · Mechanics · Level Design</div>
-  </header>
-
-  <div class="article-content">
-    <h2>1. Brief Introduction of The Game Concept</h2>
-    <p>The game's main theme is piracy, telling the story of a small seafaring crew and their adventures across a map filled with pirates. The main characters are our captain and his helper, a sailor. The captain also has a parrot. While this crew is traveling on a small ship, their ship gets damaged due to bad weather conditions, and they end up stranded on a lost island.</p>
-    <p>While our crew tries to survive on the island they have crashed on, they explore and discover things that send them on a journey. The journey that begins this way takes our crew on an adventure where they will set foot on many lands.</p>
-
-    <h2>2. Gameplay Mechanics (Obstacles, Power-Ups, and Boosters)</h2>
-    
-    <h3>2.1 Obstacles</h3>
-    <p>In the first 50 levels of the game, there are 6 different obstacles. Two additional properties are introduced specifically for this game:</p>
-    <ul>
-      <li><strong>Fragile:</strong> The obstacle cannot be cleared by an adjacent match, but it breaks when hit by a power-up. Its intended collection method (such as reaching the bottom row by gravity) only works when the obstacle is still intact.</li>
-      <li><strong>Direction-Conditioned:</strong> The obstacle reacts only to adjacent matches made from a specific direction. Matches from any other side have no effect.</li>
-    </ul>
-
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Unlocks</th>
-        <th>Definition & Type</th>
-      </tr>
-      <tr>
-        <td><strong>Rope Knot</strong></td>
-        <td>Level 2</td>
-        <td>Stays in place without being affected by gravity. When an adjacent match is made next to it, the knot unravels. Tier 2 requires two adjacent matches.</td>
-      </tr>
-      <tr>
-        <td><strong>Seaweed</strong></td>
-        <td>Level 5</td>
-        <td>Sits in front of the match items as a layer and never affects gravity. Cleared by making a match on top of it. Tier 2 requires two matches.</td>
-      </tr>
-      <tr>
-        <td><strong>Bottle</strong></td>
-        <td>Level 11</td>
-        <td>Affected by gravity. Must be carried to the bottom row to collect it. Fragile: breaks if hit by a power-up, failing the collection.</td>
-      </tr>
-      <tr>
-        <td><strong>Compass</strong></td>
-        <td>Level 21</td>
-        <td>Points to a specific direction and can only be cleared by a match from that direction. Changes direction randomly every 3 moves.</td>
-      </tr>
-      <tr>
-        <td><strong>Chest</strong></td>
-        <td>Level 31</td>
-        <td>Sits stationary and releases one Pirate Gold every time an adjacent match is made next to it. Tier 2 requires a falling Key to unlock first.</td>
-      </tr>
-      <tr>
-        <td><strong>Flagpole</strong></td>
-        <td>Level 41</td>
-        <td>A vertical 1x3 obstacle. After 3 same-colored adjacent matches, the flag reaches the top and clears. Tier 2 has two flags side by side.</td>
-      </tr>
-    </table>
-
-    <h3>2.2 Power-Ups</h3>
-    <p>The game features four different power-ups created by blasting groups of same-colored cubes:</p>
-    <ul>
-      <li><strong>Pufferfish (4 cubes):</strong> Passive power-up. Puffs up and bursts when a cube of its own color or an obstacle ends up adjacent to it.</li>
-      <li><strong>Anchor (5-6 cubes):</strong> Two-directional power-up pointing to opposite sides. Clears the entire row or column when triggered.</li>
-      <li><strong>Barrel (7-8 cubes):</strong> Explodes outward in a diamond-shaped pattern, clearing every item up to 2 tiles away.</li>
-      <li><strong>Octopus (9+ cubes):</strong> The most powerful single power-up. Clears every cube of its own color across the entire grid.</li>
-    </ul>
-
-    <h3>2.3 Boosters</h3>
-    <p>Four in-game boosters unlock as the player progresses, themed around the pirate world:</p>
-    <ul>
-      <li><strong>Pirate Hook:</strong> Clears a selected single item or damages a selected obstacle.</li>
-      <li><strong>Side/Bow Cannon:</strong> Clears all items in a selected row/column.</li>
-      <li><strong>Bombardment Ship:</strong> Throws pirate grenades to three positions on the grid, dealing 3x3 damage each.</li>
-      <li><strong>Parrot:</strong> Shuffles all cubes on the grid.</li>
-    </ul>
-
-    <h2>3. Meta Game Design</h2>
-    <p>The meta-game is designed around concepts that feel open and connected. The player progresses through level sections (e.g., Levels 1-10) on specific islands. When the player arrives, the island is covered with clouds.</p>
-    <p>As the player completes levels, they earn stars. These stars are used to build things along the path (like a Camp Fire, Shelter, or Lighthouse), turning the island into a vibrant area. When all levels of an island are completed, a mysterious chest is found containing boosters, power-ups, gold, and a unique collectible item (like a Map Fragment or Pirate's Lost Medallion).</p>
-
-    <h2>4. Level Design Strategy</h2>
-    <p>Levels are designed with rising and falling difficulty curves in a wave-like pattern to prevent frustration. Early levels are simple geometric grids to teach mechanics. As new obstacles are added, they are combined with each other.</p>
-    
-    <img src="images/gdd_level1.png" style="width: 100%; max-width: 600px; display: block; margin: 32px auto; border-radius: 8px; border: 1px solid var(--line-2);" alt="Level Design Concept 1">
-    <img src="images/gdd_level2.png" style="width: 100%; max-width: 600px; display: block; margin: 32px auto; border-radius: 8px; border: 1px solid var(--line-2);" alt="Level Design Concept 2">
-
-    <ul>
-      <li><strong>Introduction & Tutorial Levels:</strong> Plentiful move freedom, introducing the first version of each obstacle.</li>
-      <li><strong>Combination Levels:</strong> Bringing a few obstacle types together to teach the player how to deal with combinations.</li>
-      <li><strong>Challenge Levels:</strong> Splitting the grid and placing obstacles in hard-to-reach areas, forcing the player to create and use power-ups.</li>
-      <li><strong>Single-Obstacle High-Target Levels:</strong> Focusing on collecting a large amount of a single obstacle, providing a visually satisfying "blast" experience.</li>
-    </ul>
-
-    <h2>5. UI Design</h2>
-    <p>The home screen and in-game UI are designed to feel as open and uncluttered as possible. The game area is placed exactly in the middle of the scene. The bottom of the screen houses rectangular booster buttons, with no background panel behind them to prevent the screen from feeling crowded.</p>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 40px;">
-      <img src="images/gdd_ui1.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--line-2);" alt="Home Screen UI Wireframe">
-      <img src="images/gdd_ui2.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--line-2);" alt="In-Game Screen UI Wireframe">
-    </div>
-
+<main class="pdf-container">
+  <div class="pdf-header">
+    <h1 class="pdf-title">Game Design Document: Pirate Blast</h1>
+    <span style="font-family: var(--mono); font-size: 11px; color: var(--fg-faint); letter-spacing: 0.1em; text-transform: uppercase;">Secure PDF Viewer</span>
+  </div>
+  <div class="iframe-wrapper">
+    <iframe src="Game_Design_Document.pdf#toolbar=0" title="Game Design Document"></iframe>
   </div>
 </main>
-
-<footer style="text-align: center; padding: 40px; color: var(--fg-faint); font-size: 12px; font-family: var(--mono); letter-spacing: 0.1em; border-top: var(--rule);">
-  © 2025 BUĞRACAN BOZKURT
-</footer>
 
 </body>
 </html>
