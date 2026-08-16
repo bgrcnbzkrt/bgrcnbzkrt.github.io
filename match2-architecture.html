@@ -192,6 +192,10 @@ a { color: inherit; text-decoration: none; }
     <p>The Logic layer computes the grid state. It uses fundamental structures like <code>GridPosition</code> (a struct for coordinate mathematics) and <code>Cell</code> (representing each grid slot and holding references to its neighbors and occupying item).</p>
     <p>Items such as <code>Cube</code>, <code>Duck</code>, <code>Balloon</code>, and <code>Rocket</code> all implement a base <code>IGridItem</code> interface. To ensure maximum flexibility, behaviors are attached via interfaces like <code>IBottomCollectable</code>, <code>IDamageable</code>, or <code>IFallable</code>. Systems such as <code>FallSystem</code> and <code>MatchSystem</code> act strictly upon these interfaces rather than concrete classes.</p>
 
+    <h3>1.3. Initialization Data Flow</h3>
+    <p>During the start of the game, <code>GameManager.Awake()</code> sets up the dependency injection and initializes the required systems to build the scene. The execution order is strictly managed as seen below:</p>
+    <img src="images/image1.png" style="width: 100%; border-radius: 8px; margin: 24px 0; border: 1px solid var(--line-2);" alt="Initialization Flowchart">
+
     <h2>2. Core Mechanics & Algorithms</h2>
 
     <h3>2.1. Processing Player Input</h3>
@@ -202,6 +206,8 @@ a { color: inherit; text-decoration: none; }
       <li><strong>Fall & Fill Loop:</strong> A <code>do-while</code> loop processes <code>Fall</code> and <code>Fill</code> mechanics for the affected columns using a two-pointer algorithm. This loop continues until all gravity physics are resolved.</li>
       <li><strong>Bottom Collection:</strong> After gravity settles, <code>BottomCollectSystem</code> checks if items like "Ducks" have reached the lowest row and collects them.</li>
     </ul>
+
+    <img src="images/image2.png" style="width: 100%; border-radius: 8px; margin: 24px 0; border: 1px solid var(--line-2);" alt="Input Processing Flowchart">
 
     <h3>2.2. The Match Finder (Breadth-First Search)</h3>
     <p>The <code>MatchFinder</code> class utilizes a <strong>Breadth-First Search (BFS)</strong> algorithm. It uses a <code>Queue</code> to check adjacent cells for matching colors and a <code>HashSet</code> of visited cells to prevent infinite loops. The resulting matched group is then passed to the logic controller to apply damage to neighboring obstacles (like Boxes or Balloons).</p>
@@ -217,6 +223,10 @@ a { color: inherit; text-decoration: none; }
       <li><strong>GameSettingsData:</strong> A centralized configuration file for animation timings, gravity speed, and delay parameters, allowing designers to tweak the game feel without recompiling code.</li>
       <li><strong>LevelData:</strong> A 2D matrix structure configured via custom Inspector code to design levels visually within the Unity Editor.</li>
     </ul>
+
+    <h2>5. Scene Hierarchy & Setup</h2>
+    <p>In the Unity hierarchy, everything is modular. <code>GameManager</code>, <code>InputManager</code>, <code>ItemViewFactory</code>, <code>ParticleReactor</code>, <code>AudioReactor</code>, <code>UIPresenter</code>, and <code>GridView</code> act as single-responsibility controllers. The components are assigned via the Inspector to maintain a clean MVC connection without hardcoding dependencies.</p>
+    <img src="images/image3.png" style="width: 100%; border-radius: 8px; margin: 24px 0; border: 1px solid var(--line-2);" alt="Unity Scene Hierarchy">
 
     <p>By enforcing this strict MVC architecture and relying heavily on interface segregation and ScriptableObjects, the puzzle game framework becomes highly scalable, allowing rapid prototyping of new mechanics and levels.</p>
 
