@@ -769,11 +769,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
       <div class="game-card__meta">
         <h3>Alright, Chef!</h3>
         <p class="game-card__tags">Mobile · Unity · Casual</p>
-        <p class="game-card__desc" style="line-height: 1.6; padding-left: 0;">
-          • Developed a dynamic order system evaluating procedural customer requests.<br>
-          • Implemented a multi-order time management system with per-level limits.<br>
-          • Built a scalable restaurant progression system driven by in-game currency.
-        </p>
+        <p class="game-card__desc">Run your own restaurant, serve customers, earn stars and decorate your place to make it the best in town.</p>
         <div class="store-badges">
           <a href="https://apps.apple.com/tr/app/alright-chef/id6756134625?l=tr" target="_blank" class="store-badge">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
@@ -794,11 +790,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
       <div class="game-card__meta">
         <h3>Gravitas Match</h3>
         <p class="game-card__tags">Mobile · Unity · Puzzle</p>
-        <p class="game-card__desc" style="line-height: 1.6; padding-left: 0;">
-          • Developed a combinatorial validation algorithm evaluating sequences in real-time.<br>
-          • Designed handcrafted levels with defined grid layouts and target combinations.<br>
-          • Shipped end-to-end as a solo developer, handling programming, UI, and audio.
-        </p>
+        <p class="game-card__desc">Explore planets, discover unique combinations, complete levels and play fun mini-games across the galaxy.</p>
         <div class="store-badges">
           <a href="https://apps.apple.com/tr/app/gravitas-match/id6756153570?l=tr" target="_blank" class="store-badge">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
@@ -808,12 +800,30 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
       </div>
     </article>
 
+    <!-- Animal Smash -->
+    <article class="game-card game-card--clickable reveal" onclick="switchToDemos()">
+      <div class="game-card__media">
+        <div class="game-card__poster game-card__poster--art game-card__poster--demo">
+          <img src="images/animal-smash.jpg" alt="Animal Smash">
+        </div>
+        <div class="game-card__preview" data-label="PLAY DEMO"></div>
+        <div class="game-card__play-icon"></div>
+        <span class="game-card__badge" style="background: transparent; color: var(--accent); border: 1px solid var(--accent);">Coming Soon</span>
+      </div>
+      <div class="game-card__meta">
+        <h3>Animal Smash</h3>
+        <p class="game-card__tags">Mobile · Unity · Arcade</p>
+        <p class="game-card__desc">Smash falling animal blocks with a giant hammer! Collect coins, unlock new hammers, and beat high scores.</p>
+        <span class="game-card__link">Play demo →</span>
+      </div>
+    </article>
+
   </div>
 
   <!-- DEMOS -->
   <div class="games-grid is-hidden" data-pane="demos">
 
-    <article class="game-card game-card--clickable reveal" onclick="openModal()">
+    <article class="game-card game-card--clickable reveal" onclick="openModal('GameBuild/index.html', 'ALRIGHT, CHEF! — WEB DEMO')">
       <div class="game-card__media">
         <div class="game-card__poster game-card__poster--art game-card__poster--demo">
           <img src="images/alright-chef.png" alt="Alright, Chef! — WebGL Demo">
@@ -826,6 +836,24 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
         <h3>Alright, Chef!</h3>
         <p class="game-card__tags">WebGL · Unity · Browser</p>
         <p class="game-card__desc">Play the web build directly in your browser. No download needed — click to launch.</p>
+        <span class="game-card__link">Play demo →</span>
+      </div>
+    </article>
+
+    <!-- Animal Smash Demo -->
+    <article class="game-card game-card--clickable reveal" onclick="openModal('AnimalSmashBuild/index.html', 'ANIMAL SMASH — WEB DEMO')">
+      <div class="game-card__media">
+        <div class="game-card__poster game-card__poster--art game-card__poster--demo">
+          <img src="images/animal-smash.jpg" alt="Animal Smash — WebGL Demo">
+        </div>
+        <div class="game-card__preview" data-label="PLAY IN BROWSER"></div>
+        <div class="game-card__play-icon"></div>
+        <span class="game-card__badge game-card__badge--demo">Demo</span>
+      </div>
+      <div class="game-card__meta">
+        <h3>Animal Smash</h3>
+        <p class="game-card__tags">WebGL · Unity · Browser</p>
+        <p class="game-card__desc">Smash blocks and beat high scores in this early prototype. Click to play in browser.</p>
         <span class="game-card__link">Play demo →</span>
       </div>
     </article>
@@ -909,7 +937,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
   <div class="modal" id="modal">
     <div class="modal-header">
-      <span class="modal-title">ALRIGHT, CHEF! — WEB DEMO</span>
+      <span class="modal-title" id="modalTitle">ALRIGHT, CHEF! — WEB DEMO</span>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="iframe-wrapper" id="iframeWrapper"></div>
@@ -940,6 +968,13 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
     });
   });
 
+  window.switchToDemos = function() {
+    tabs.forEach(x => x.classList.remove('is-active'));
+    document.querySelector('.tab[data-tab="demos"]').classList.add('is-active');
+    panes.forEach(p => p.classList.toggle('is-hidden', p.dataset.pane !== 'demos'));
+    document.getElementById('games').scrollIntoView({ behavior: 'smooth' });
+  };
+
   // Reveal on scroll
   const reveals = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
@@ -954,9 +989,10 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 })();
 
 // Modal
-function openModal() {
+function openModal(src = 'GameBuild/index.html', title = 'ALRIGHT, CHEF! — WEB DEMO') {
+  document.getElementById('modalTitle').innerText = title;
   document.getElementById('iframeWrapper').innerHTML =
-    '<iframe src="GameBuild/index.html" allowfullscreen allow="autoplay; fullscreen"></iframe>';
+    `<iframe src="${src}" allowfullscreen allow="autoplay; fullscreen"></iframe>`;
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
