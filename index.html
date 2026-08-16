@@ -246,6 +246,9 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
   border-bottom: var(--rule);
   position: relative;
 }
+.section:first-of-type {
+  padding-top: 120px;
+}
 .section__head {
   margin-bottom: 64px;
   max-width: 900px;
@@ -710,7 +713,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
 
 <!-- NAV -->
 <header class="nav" id="nav">
-  <a href="#hero" class="nav__brand">
+  <a href="#games" class="nav__brand">
     <span class="nav__dot"></span>
     <span class="nav__name">BUĞRACAN BOZKURT</span>
   </a>
@@ -721,25 +724,6 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
   </nav>
   <a href="#contact" class="nav__cta">Get in touch <span>→</span></a>
 </header>
-
-<!-- HERO -->
-<section class="hero" id="hero">
-  <div class="hero__inner">
-    <h1 class="hero__title">
-      <span class="line">Buğracan</span>
-      <span class="line"><em>Bozkurt</em></span>
-    </h1>
-    <p class="hero__sub">Unity developer focused on creating optimized and engaging mobile games. Always eager to learn, build, and tackle new challenges in game development.</p>
-    <div class="hero__cta-row">
-      <a href="#games" class="btn btn--primary">View games <span>↓</span></a>
-      <a href="#about" class="btn btn--ghost">About me</a>
-    </div>
-  </div>
-
-  <div class="hero__rule hero__rule--bot">
-    <span class="scroll-indicator"><span class="scroll-line"></span> SCROLL</span>
-  </div>
-</section>
 
 <!-- GAMES -->
 <section class="section section--games" id="games">
