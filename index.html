@@ -967,7 +967,7 @@ button { font: inherit; background: none; border: 0; color: inherit; cursor: poi
   const reveals = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
+      if (e.isIntersecting || e.boundingClientRect.top < 0) {
         e.target.classList.add('is-in');
         io.unobserve(e.target);
       }
